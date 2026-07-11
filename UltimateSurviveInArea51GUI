@@ -4,42 +4,54 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
    Name = "Survive in Area 51 GUI",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   Icon = 0, 
    LoadingTitle = "Rayfield Interface Suite",
    LoadingSubtitle = "by Sirius",
-   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
-   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+   ShowText = "Rayfield", 
+   Theme = "Default", 
 
-   ToggleUIKeybind = "G", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+   ToggleUIKeybind = "G", 
 
    DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+   DisableBuildWarnings = false, 
 
    ConfigurationSaving = {
       Enabled = true,
-      FolderName = nil, -- Create a custom folder for your hub/game
+      FolderName = nil, 
       FileName = "Big Hub"
    },
 
    Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
-      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+      Enabled = false, 
+      Invite = "noinvitelink", 
+      RememberJoins = true 
    },
 
-   KeySystem = false, -- Set this to true to use our key system
+   KeySystem = false, 
    KeySettings = {
       Title = "Untitled",
       Subtitle = "Key System",
-      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
-      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+      Note = "No method of obtaining the key is provided", 
+      FileName = "Key", 
+      SaveKey = true, 
+      GrabKeyFromSite = false, 
+      Key = {"Hello"} 
    }
 })
 
-local Tab = Window:CreateTab("Survive in Area 51", 4483362458) -- Title, Image
+-- Local helper function to safely reset character
+local function resetCharacter()
+    task.wait(0.5)
+    local char = player.Character
+    if char then
+        local humanoid = char:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.Health = 0
+        end
+    end
+end
+
+local Tab = Window:CreateTab("Survive in Area 51", 4483362458) 
 
 local Section = Tab:CreateSection("Survive in Area 51")
 
@@ -126,11 +138,11 @@ local Divider = Tab:CreateDivider()
 
 ------------------------------------------------------------------------
 
-local Tab = Window:CreateTab("Weapons", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Weapons", 4483362458) 
 
 local Section = Tab:CreateSection("Weapons")
 
-Section:Set("Weapons -- Reset before getting each weapon")
+Section:Set("Weapons -- Automatically resets after collection")
 
 local Button = Tab:CreateButton({
     Name = "Get HEX Gun",
@@ -147,6 +159,7 @@ local Button = Tab:CreateButton({
         local targetPart = game:GetService("Workspace")["Floor 2"].GetHEXGun.Head
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
+        resetCharacter()
     end,
 })
 
@@ -165,6 +178,7 @@ local Button = Tab:CreateButton({
         local targetPart = game:GetService("Workspace"):WaitForChild("Exit")
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
+        resetCharacter()
     end,
 })
 
@@ -183,6 +197,7 @@ local Button = Tab:CreateButton({
         local targetPart = game:GetService("Workspace"):WaitForChild("LavaZone"):WaitForChild("Escape"):WaitForChild("Head")
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
+        resetCharacter()
     end,
 })
 
@@ -201,6 +216,7 @@ local Button = Tab:CreateButton({
         local targetPart = game:GetService("Workspace"):WaitForChild("IceZone"):WaitForChild("GetIceCrossbow"):WaitForChild("Head")
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
+        resetCharacter()
     end,
 })
 
@@ -217,8 +233,9 @@ local Button = Tab:CreateButton({
         task.wait(1.5)
 
         local targetPart = game:GetService("Workspace"):WaitForChild("Floor 2"):WaitForChild("GetRedMissile"):WaitForChild("Head")
-        firetouchinterest(root, targetPart, 0) -- touch began
-        firetouchinterest(root, targetPart, 1) -- touch ended
+        firetouchinterest(root, targetPart, 0) 
+        firetouchinterest(root, targetPart, 1) 
+        resetCharacter()
     end,
 })
 
@@ -237,7 +254,6 @@ local Button = Tab:CreateButton({
         root.CFrame = CFrame.new(-19, 1057, 1160)
         task.wait(0.5)
 
-        -- Fire nearest prompt
         local player = game:GetService("Players").LocalPlayer
 
         local function getNearestPrompt()
@@ -271,6 +287,7 @@ local Button = Tab:CreateButton({
         local targetPart = game:GetService("Workspace").Incinerator.GetBurningSword
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
+        resetCharacter()
     end,
 })
 
@@ -289,6 +306,7 @@ local Button = Tab:CreateButton({
         local targetPart = game:GetService("Workspace").GetReaperGun
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
+        resetCharacter()
     end,
 })
 
@@ -307,6 +325,7 @@ local Button = Tab:CreateButton({
         local targetPart = game:GetService("Workspace").GetJackGun
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
+        resetCharacter()
     end,
 })
 
@@ -322,7 +341,6 @@ local Button = Tab:CreateButton({
         root.CFrame = CFrame.new(targetPos)
         task.wait(1.5)
 
-        -- First prompt
         root.CFrame = CFrame.new(-443, 971, -196)
         task.wait(0.5)
         local player = game:GetService("Players").LocalPlayer
@@ -355,7 +373,6 @@ local Button = Tab:CreateButton({
             prompt:InputHoldEnd(Enum.UserInputType.Keyboard)
         end
 
-        -- Second prompt
         root.CFrame = CFrame.new(-282, 971, -92)
         task.wait(0.5)
 
@@ -365,10 +382,10 @@ local Button = Tab:CreateButton({
             prompt:InputHoldEnd(Enum.UserInputType.Keyboard)
         end
 
-        -- Touch Water Gun
         local targetPart = game:GetService("Workspace").Sewer.GetWaterGun
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
+        resetCharacter()
     end,
 })
 
@@ -376,7 +393,7 @@ local Divider = Tab:CreateDivider()
 
 local Section = Tab:CreateSection("Weapons")
 
-Section:Set("Event Weapons -- Reset before getting each weapon")
+Section:Set("Event Weapons -- Automatically resets after collection")
 
 local Button = Tab:CreateButton({
    Name = "Get RGB",
@@ -389,12 +406,12 @@ local Button = Tab:CreateButton({
        root.CFrame = CFrame.new(targetPos)
        task.wait(1.5)
        local targetPart = workspace:WaitForChild("CorruptedZone"):WaitForChild("RGB - 9999 Cell"):WaitForChild("Head")
-       while char and char.Parent do
-           firetouchinterest(targetPart, root, 0)
-           task.wait()
-           firetouchinterest(targetPart, root, 1)
-           task.wait()
-       end
+       
+       firetouchinterest(targetPart, root, 0)
+       task.wait(0.1)
+       firetouchinterest(targetPart, root, 1)
+       
+       resetCharacter()
    end,
 })
 
@@ -406,15 +423,14 @@ local Button = Tab:CreateButton({
        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
        local root = char:WaitForChild("HumanoidRootPart")
 
-       -- Teleport to the target position first
        local targetPos = Vector3.new(624, 1090, 750.5)
        root.CFrame = CFrame.new(targetPos)
        task.wait(1.5)
 
-       -- Touch the Scarecrow Skull to collect it
        local targetPart = workspace:WaitForChild("GetScarecrowSkull")
        firetouchinterest(root, targetPart, 0)
        firetouchinterest(root, targetPart, 1)
+       resetCharacter()
    end,
 })
 
@@ -433,6 +449,7 @@ local Button = Tab:CreateButton({
         local targetPart = game:GetService("Workspace"):WaitForChild("CyberLand"):WaitForChild("GetMechGun")
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
+        resetCharacter()
     end,
 })
 
@@ -451,6 +468,7 @@ local Button = Tab:CreateButton({
         local targetPart = game:GetService("Workspace"):WaitForChild("GetCrescendo")
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
+        resetCharacter()
     end,
 })
 
@@ -469,6 +487,7 @@ local Button = Tab:CreateButton({
         local exitHead = game:GetService("Workspace"):WaitForChild("NightCity"):WaitForChild("Exit"):WaitForChild("Head")
         firetouchinterest(root, exitHead, 0)
         firetouchinterest(root, exitHead, 1)
+        resetCharacter()
     end,
 })
 
@@ -487,6 +506,7 @@ local Button = Tab:CreateButton({
         local targetHead = game:GetService("Workspace"):WaitForChild("DeadGround"):WaitForChild("LXD - 9999 Cell"):WaitForChild("Head")
         firetouchinterest(root, targetHead, 0)
         firetouchinterest(root, targetHead, 1)
+        resetCharacter()
     end,
 })
 
@@ -505,10 +525,11 @@ local Button = Tab:CreateButton({
         local targetHead = game:GetService("Workspace").MazeWorld["ESCAPE FROM THIS HELL"].Head
         firetouchinterest(root, targetHead, 0)
         firetouchinterest(root, targetHead, 1)
+        resetCharacter()
     end,
 })
 
-local Tab = Window:CreateTab("Teleport", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Teleport", 4483362458) 
 
 local Section = Tab:CreateSection("Teleport")
 
@@ -529,8 +550,8 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
         local targetPart = workspace:WaitForChild("Ground"):WaitForChild("GoBack")
-        firetouchinterest(root, targetPart, 0) -- touch began
-        firetouchinterest(root, targetPart, 1) -- touch ended
+        firetouchinterest(root, targetPart, 0) 
+        firetouchinterest(root, targetPart, 1) 
     end,
 })
 
@@ -556,8 +577,8 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
         local targetPart = workspace:WaitForChild("Ground"):WaitForChild("GoCraft")
-        firetouchinterest(root, targetPart, 0) -- touch began
-        firetouchinterest(root, targetPart, 1) -- touch ended
+        firetouchinterest(root, targetPart, 0) 
+        firetouchinterest(root, targetPart, 1) 
     end,
 })
 
@@ -569,8 +590,8 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
         local targetPart = workspace:WaitForChild("Ground"):WaitForChild("GoMine")
-        firetouchinterest(root, targetPart, 0) -- touch began
-        firetouchinterest(root, targetPart, 1) -- touch ended
+        firetouchinterest(root, targetPart, 0) 
+        firetouchinterest(root, targetPart, 1) 
     end,
 })
 
@@ -591,7 +612,7 @@ local Divider = Tab:CreateDivider()
 
 ---------------------------------------------------------------
 
-local Tab = Window:CreateTab("Armour", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Armour", 4483362458) 
 
 local Section = Tab:CreateSection("Armours")
 
@@ -699,7 +720,7 @@ local Button = Tab:CreateButton({
 
 local Divider = Tab:CreateDivider()
 
-Divider:Set(true) -- Whether the divider's visibility is to be set to true or false.
+Divider:Set(true) 
 
 Rayfield:SetVisibility(true)
 
