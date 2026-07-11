@@ -336,27 +336,29 @@ local Button = Tab:CreateButton({
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+        local camera = workspace.CurrentCamera
 
         local targetPos = Vector3.new(624, 1090, 750.5)
         root.CFrame = CFrame.new(targetPos)
         task.wait(1.5)
 
+        -- First prompt position
         root.CFrame = CFrame.new(-443, 971, -196)
+        camera.CFrame = CFrame.new(-451.91348, 975.12378, -195.95332, 0.00524, 0.27242, -0.96216, 0.00000, 0.96218, 0.27242, 0.99999, -0.00143, 0.00504)
         task.wait(0.5)
-        local player = game:GetService("Players").LocalPlayer
 
         local function getNearestPrompt()
-            local char = player.Character
+            local char = LocalPlayer.Character
             if not char then return nil end
-            local root = char:FindFirstChild("HumanoidRootPart")
-            if not root then return nil end
+            local r = char:FindFirstChild("HumanoidRootPart")
+            if not r then return nil end
 
             local nearest, shortest = nil, math.huge
             for _, v in pairs(workspace:GetDescendants()) do
                 if v:IsA("ProximityPrompt") and v.Enabled then
                     local part = v.Parent:IsA("BasePart") and v.Parent or nil
                     if part then
-                        local dist = (root.Position - part.Position).Magnitude
+                        local dist = (r.Position - part.Position).Magnitude
                         if dist < shortest then
                             shortest = dist
                             nearest = v
@@ -373,7 +375,9 @@ local Button = Tab:CreateButton({
             prompt:InputHoldEnd(Enum.UserInputType.Keyboard)
         end
 
+        -- Second prompt position
         root.CFrame = CFrame.new(-282, 971, -92)
+        camera.CFrame = CFrame.new(-274.44763, 974.97076, -91.88136, 0.01571, -0.29943, 0.95399, 0.00000, 0.95411, 0.29947, -0.99988, -0.00470, 0.01499)
         task.wait(0.5)
 
         prompt = getNearestPrompt()
@@ -382,6 +386,7 @@ local Button = Tab:CreateButton({
             prompt:InputHoldEnd(Enum.UserInputType.Keyboard)
         end
 
+        -- Touch Water Gun
         local targetPart = game:GetService("Workspace").Sewer.GetWaterGun
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
