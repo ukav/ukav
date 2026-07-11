@@ -608,7 +608,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
         root.CFrame = CFrame.new(
-        -39.8893852, 982.001038, 894.992371, -0.704240561, -3.94793567e-08, -0.709961414, -5.88333791e-08, 1, 2.75155254e-09, 0.709961414, 4.37071854e-08, -0.704240561
+        -56.02641, 981.99994, 883.12762, 0.93282, 0.00000, -0.36035, -0.00000, 1.00000, -0.00000, 0.36035, 0.00000, 0.93282
         )
     end,
 })
