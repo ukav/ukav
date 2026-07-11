@@ -386,6 +386,8 @@ local Button = Tab:CreateButton({
             prompt:InputHoldEnd(Enum.UserInputType.Keyboard)
         end
 
+        task.wait(1)
+
         -- Touch Water Gun
         local targetPart = game:GetService("Workspace").Sewer.GetWaterGun
         firetouchinterest(root, targetPart, 0)
