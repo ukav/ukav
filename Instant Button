@@ -1,12 +1,20 @@
-for _, v in ipairs(workspace:GetDescendants()) do
+local function setupPrompt(v)
     if v:IsA("ProximityPrompt") then
         v.HoldDuration = 0
+        
+        -- If the game tries to change it back, instantly force it back to 0
+        v:GetPropertyChangedSignal("HoldDuration"):Connect(function()
+            if v.HoldDuration ~= 0 then
+                v.HoldDuration = 0
+            end
+        end)
     end
 end
 
--- also catch new prompts that appear later
-workspace.DescendantAdded:Connect(function(v)
-    if v:IsA("ProximityPrompt") then
-        v.HoldDuration = 0
-    end
-end)
+-- Scan existing prompts
+for _, v in ipairs(workspace:GetDescendants()) do
+    setupPrompt(v)
+end
+
+-- Catch new or streamed-in prompts
+workspace.DescendantAdded:Connect(setupPrompt)
