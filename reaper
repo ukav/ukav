@@ -1,0 +1,15 @@
+local reaper = game:GetService("Workspace"):FindFirstChild("Reaper")
+
+if reaper and reaper:FindFirstChild("Zombie") then
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Reaper",
+        Text = "Health: " .. math.floor(reaper.Zombie.Health),
+        Duration = 5
+    })
+else
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Reaper",
+        Text = "Dead",
+        Duration = 5
+    })
+end
