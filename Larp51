@@ -51,8 +51,12 @@ local function resetCharacter()
 end
 
 local function teleportToLobby(root)
-    root.CFrame = CFrame.new(624, 1090, 750.5)
-    task.wait(1.5)
+    local entrance = game:GetService("Workspace"):FindFirstChild("Ground") and game:GetService("Workspace").Ground:FindFirstChild("Entrance")
+    
+    while entrance and entrance.CanCollide == true do
+        root.CFrame = CFrame.new(624, 1090, 750.5)
+        task.wait(1.5)
+    end
 end
 
 local Tab = Window:CreateTab("Larp tools", 4483362458) 
