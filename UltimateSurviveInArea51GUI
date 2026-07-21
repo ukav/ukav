@@ -134,6 +134,13 @@ local Button = Tab:CreateButton({
     end,
 })
 
+local Button = Tab:CreateButton({
+    Name = "God mode",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/Folder/refs/heads/main/Gunmod", true))()
+    end,
+})
+
 local Divider = Tab:CreateDivider()
 
 ------------------------------------------------------------------------
