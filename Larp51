@@ -241,56 +241,6 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
-    Name = "Get Burning Sword",
-    Callback = function()
-        local Players = game:GetService("Players")
-        local LocalPlayer = Players.LocalPlayer
-        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-        local root = char:WaitForChild("HumanoidRootPart")
-
-        teleportToLobby(root)
-
-        root.CFrame = CFrame.new(-19, 1057, 1160)
-        task.wait(0.5)
-
-        local player = game:GetService("Players").LocalPlayer
-
-        local function getNearestPrompt()
-            local char = player.Character
-            if not char then return nil end
-            local root = char:FindFirstChild("HumanoidRootPart")
-            if not root then return nil end
-
-            local nearest, shortest = nil, math.huge
-            for _, v in pairs(workspace:GetDescendants()) do
-                if v:IsA("ProximityPrompt") and v.Enabled then
-                    local part = v.Parent:IsA("BasePart") and v.Parent or nil
-                    if part then
-                        local dist = (root.Position - part.Position).Magnitude
-                        if dist < shortest then
-                            shortest = dist
-                            nearest = v
-                        end
-                    end
-                end
-            end
-            return nearest
-        end
-
-        local prompt = getNearestPrompt()
-        if prompt then
-            prompt:InputHoldBegin(Enum.UserInputType.Keyboard)
-            prompt:InputHoldEnd(Enum.UserInputType.Keyboard)
-        end
-
-        local targetPart = game:GetService("Workspace").Incinerator.GetBurningSword
-        firetouchinterest(root, targetPart, 0)
-        firetouchinterest(root, targetPart, 1)
-        resetCharacter()
-    end,
-})
-
-local Button = Tab:CreateButton({
     Name = "Get Reaper's Scythe",
     Callback = function()
         local Players = game:GetService("Players")
@@ -325,7 +275,7 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
-    Name = "Get Water Gun",
+    Name = "Get Burning Sword",
     Callback = function()
         local Players = game:GetService("Players")
         local LocalPlayer = Players.LocalPlayer
@@ -335,23 +285,13 @@ local Button = Tab:CreateButton({
 
         teleportToLobby(root)
 
-        -- First prompt position
-        root.CFrame = CFrame.new(-443, 971, -196)
-        camera.CFrame = CFrame.new(-451.91348, 975.12378, -195.95332, 0.00524, 0.27242, -0.96216, 0.00000, 0.96218, 0.27242, 0.99999, -0.00143, 0.00504)
-        task.wait(0.5)
-
         local function getNearestPrompt()
-            local char = LocalPlayer.Character
-            if not char then return nil end
-            local r = char:FindFirstChild("HumanoidRootPart")
-            if not r then return nil end
-
             local nearest, shortest = nil, math.huge
             for _, v in pairs(workspace:GetDescendants()) do
                 if v:IsA("ProximityPrompt") and v.Enabled then
-                    local part = v.Parent:IsA("BasePart") and v.Parent or nil
+                    local part = v.Parent:IsA("BasePart") and v.Parent
                     if part then
-                        local dist = (r.Position - part.Position).Magnitude
+                        local dist = (root.Position - part.Position).Magnitude
                         if dist < shortest then
                             shortest = dist
                             nearest = v
@@ -362,29 +302,78 @@ local Button = Tab:CreateButton({
             return nearest
         end
 
+        local function spamPrompt(prompt)
+            local startTime = tick()
+            while tick() - startTime < 0.5 do
+                prompt:InputHoldBegin()
+                prompt:InputHoldEnd()
+                task.wait()
+            end
+        end
+
+        camera.CFrame = CFrame.new(-21.78557, 1077.18481, 1155.81604, -0.89803, 0.43326, -0.07639, 0.00000, 0.17365, 0.98481, 0.43994, 0.88438, -0.15594)
+        root.CFrame = CFrame.new(-20, 1056, 1159)
+        
         local prompt = getNearestPrompt()
         if prompt then
-            prompt:InputHoldBegin(Enum.UserInputType.Keyboard)
-            prompt:InputHoldEnd(Enum.UserInputType.Keyboard)
+            spamPrompt(prompt)
         end
 
-        -- Second prompt position
-        root.CFrame = CFrame.new(-282, 971, -92)
+        root.CFrame = CFrame.new(63, 1079, 1159)
+        
+        resetCharacter()
+    end,
+})
+
+local Button = Tab:CreateButton({
+    Name = "Get Water Gun",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        local camera = workspace.CurrentCamera
+        
+        teleportToLobby(root)
+        
+        local function getNearestPrompt()
+            local nearest, shortest = nil, math.huge
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v:IsA("ProximityPrompt") and v.Enabled then
+                    local part = v.Parent:IsA("BasePart") and v.Parent
+                    if part then
+                        local dist = (root.Position - part.Position).Magnitude
+                        if dist < shortest then
+                            shortest = dist
+                            nearest = v
+                        end
+                    end
+                end
+            end
+            return nearest
+        end
+
+        local function spamPrompt(prompt)
+            local startTime = tick()
+            while tick() - startTime < 0.5 do
+                prompt:InputHoldBegin()
+                prompt:InputHoldEnd()
+                task.wait()
+            end
+        end
+
+        camera.CFrame = CFrame.new(-451.91348, 975.12378, -195.95332, 0.00524, 0.27242, -0.96216, 0.00000, 0.96218, 0.27242, 0.99999, -0.00143, 0.00504)
+        root.CFrame = CFrame.new(-443, 971, -196)
+        local p1 = getNearestPrompt()
+        if p1 then spamPrompt(p1) end
+
         camera.CFrame = CFrame.new(-274.44763, 974.97076, -91.88136, 0.01571, -0.29943, 0.95399, 0.00000, 0.95411, 0.29947, -0.99988, -0.00470, 0.01499)
-        task.wait(0.5)
+        root.CFrame = CFrame.new(-282, 971, -92)
+        local p2 = getNearestPrompt()
+        if p2 then spamPrompt(p2) end
 
-        prompt = getNearestPrompt()
-        if prompt then
-            prompt:InputHoldBegin(Enum.UserInputType.Keyboard)
-            prompt:InputHoldEnd(Enum.UserInputType.Keyboard)
-        end
-
-        task.wait(1)
-
-        -- Touch Water Gun
-        local targetPart = game:GetService("Workspace").Sewer.GetWaterGun
-        firetouchinterest(root, targetPart, 0)
-        firetouchinterest(root, targetPart, 1)
+        root.CFrame = CFrame.new(-363, 978, -54)
+        
         resetCharacter()
     end,
 })
@@ -592,6 +581,21 @@ local Button = Tab:CreateButton({
     end,
 })
 
+local Button = Tab:CreateButton({
+    Name = "In Portal",
+    Callback = function()
+        local player = game:GetService("Players").LocalPlayer
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        local beam = game:GetService("Workspace"):FindFirstChild("Portal") and game:GetService("Workspace").Portal:FindFirstChild("Beam")
+        
+        if root and beam then
+            firetouchinterest(root, beam, 0)
+            firetouchinterest(root, beam, 1)
+        end
+    end,
+})
+
 local Divider = Tab:CreateDivider()
 
 ---------------------------------------------------------------
@@ -702,10 +706,16 @@ local Divider = Tab:CreateDivider()
 
 local Tab = Window:CreateTab("Alive or Dead", 4483362458) 
 
-local Button = Tab:CreateButton({
-   Name = "Reaper",
-   Callback = function()
-local reaper = game:GetService("Workspace"):FindFirstChild("Reaper")
+local function sendYesNoNotification(title, text, callback)
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = 10,
+        Button1 = "Yes",
+        Button2 = "No",
+        Callback = callback
+    })
+end
 
 local function outline(model)
     if model and model:FindFirstChild("HumanoidRootPart") then
@@ -718,23 +728,6 @@ local function outline(model)
     end
 end
 
-if reaper and reaper:FindFirstChild("Zombie") then
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Reaper",
-        Text = "Health: " .. math.floor(reaper.Zombie.Health),
-        Duration = 5
-    })
-    outline(reaper)
-else
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Reaper",
-        Text = "Dead",
-        Duration = 5
-    })
-end
-   end,
-})
-
 local Button = Tab:CreateButton({
     Name = "Get Reaper's Gun (Auto)",
     Callback = function()
@@ -745,26 +738,25 @@ local Button = Tab:CreateButton({
         
         if root then
             if not reaper or not reaper:FindFirstChild("Zombie") then
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "Reaper",
-                    Text = "Dead! Teleporting to gun...",
-                    Duration = 3
-                })
-                
-                teleportToLobby(root)
-                local reaperGun = game:GetService("Workspace"):FindFirstChild("GetReaperGun")
-                if reaperGun then
-                    root.CFrame = reaperGun.CFrame
-                    task.wait(0.1)
-                    firetouchinterest(root, reaperGun, 0)
-                    firetouchinterest(root, reaperGun, 1)
-                end
+                sendYesNoNotification("Reaper", "Reaper is dead. Go to gun?", function(result)
+                    if result == "Yes" then
+                        teleportToLobby(root)
+                        local reaperGun = game:GetService("Workspace"):FindFirstChild("GetReaperGun")
+                        if reaperGun then
+                            root.CFrame = reaperGun.CFrame
+                            task.wait(0.1)
+                            firetouchinterest(root, reaperGun, 0)
+                            firetouchinterest(root, reaperGun, 1)
+                        end
+                    end
+                end)
             else
                 game:GetService("StarterGui"):SetCore("SendNotification", {
                     Title = "Reaper",
-                    Text = "Reaper is still alive!",
+                    Text = "Health: " .. math.floor(reaper.Zombie.Health),
                     Duration = 5
                 })
+                outline(reaper)
             end
         end
     end,
@@ -780,26 +772,25 @@ local Button = Tab:CreateButton({
         
         if root then
             if not jack or not jack:FindFirstChild("Zombie") then
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "Jack O' Lantern",
-                    Text = "Dead! Teleporting to gun...",
-                    Duration = 3
-                })
-                
-                teleportToLobby(root)
-                local jackGun = game:GetService("Workspace"):FindFirstChild("GetJackGun")
-                if jackGun then
-                    root.CFrame = jackGun.CFrame
-                    task.wait(0.1)
-                    firetouchinterest(root, jackGun, 0)
-                    firetouchinterest(root, jackGun, 1)
-                end
+                sendYesNoNotification("Jack O' Lantern", "Jack is dead. Go to gun?", function(result)
+                    if result == "Yes" then
+                        teleportToLobby(root)
+                        local jackGun = game:GetService("Workspace"):FindFirstChild("GetJackGun")
+                        if jackGun then
+                            root.CFrame = jackGun.CFrame
+                            task.wait(0.1)
+                            firetouchinterest(root, jackGun, 0)
+                            firetouchinterest(root, jackGun, 1)
+                        end
+                    end
+                end)
             else
                 game:GetService("StarterGui"):SetCore("SendNotification", {
                     Title = "Jack O' Lantern",
-                    Text = "Jack is still alive!",
+                    Text = "Health: " .. math.floor(jack.Zombie.Health),
                     Duration = 5
                 })
+                outline(jack)
             end
         end
     end,
