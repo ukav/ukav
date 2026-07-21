@@ -705,7 +705,18 @@ local Tab = Window:CreateTab("Alive or Dead", 4483362458)
 local Button = Tab:CreateButton({
    Name = "Reaper",
    Callback = function()
-   local reaper = game:GetService("Workspace"):FindFirstChild("Reaper")
+local reaper = game:GetService("Workspace"):FindFirstChild("Reaper")
+
+local function outline(model)
+    if model and model:FindFirstChild("HumanoidRootPart") then
+        local highlight = Instance.new("Highlight")
+        highlight.Parent = model
+        highlight.FillTransparency = 1
+        highlight.OutlineColor = Color3.fromRGB(255, 0, 0)
+        task.wait(5)
+        highlight:Destroy()
+    end
+end
 
 if reaper and reaper:FindFirstChild("Zombie") then
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -713,6 +724,7 @@ if reaper and reaper:FindFirstChild("Zombie") then
         Text = "Health: " .. math.floor(reaper.Zombie.Health),
         Duration = 5
     })
+    outline(reaper)
 else
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "Reaper",
@@ -726,7 +738,18 @@ end
 local Button = Tab:CreateButton({
    Name = "Jack",
    Callback = function()
-   local jack = game:GetService("Workspace"):FindFirstChild("Jack O' Lantern")
+local jack = game:GetService("Workspace"):FindFirstChild("Jack O' Lantern")
+
+local function outline(model)
+    if model and model:FindFirstChild("HumanoidRootPart") then
+        local highlight = Instance.new("Highlight")
+        highlight.Parent = model
+        highlight.FillTransparency = 1
+        highlight.OutlineColor = Color3.fromRGB(255, 0, 0)
+        task.wait(5)
+        highlight:Destroy()
+    end
+end
 
 if jack and jack:FindFirstChild("Zombie") then
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -734,6 +757,7 @@ if jack and jack:FindFirstChild("Zombie") then
         Text = "Health: " .. math.floor(jack.Zombie.Health),
         Duration = 5
     })
+    outline(jack)
 else
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "Jack O' Lantern",
