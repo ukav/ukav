@@ -135,7 +135,7 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
-    Name = "God mode",
+    Name = "Gun mod",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/Folder/refs/heads/main/Gunmod", true))()
     end,
