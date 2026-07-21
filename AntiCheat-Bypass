@@ -1,22 +1,31 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
+local function teleportToLobby(root)
+    local entrance = game:GetService("Workspace"):FindFirstChild("Ground") and game:GetService("Workspace").Ground:FindFirstChild("Entrance")
+    
+    while entrance and entrance.CanCollide == true do
+        root.CFrame = CFrame.new(624, 1090, 750.5)
+        task.wait(1.5)
+    end
+end
+
 local function tweenPositions()
-	local char = player.Character or player.CharacterAdded:Wait()
-	local root = char:WaitForChild("HumanoidRootPart")
-	local originalCF = root.CFrame
+    local char = player.Character or player.CharacterAdded:Wait()
+    local root = char:WaitForChild("HumanoidRootPart")
+    local originalCF = root.CFrame
 
-	local targetPos = Vector3.new(624, 1090, 750.5)
+    teleportToLobby(root)
 
-	local oldGravity = workspace.Gravity
-	workspace.Gravity = 240
+    local oldGravity = workspace.Gravity
+    workspace.Gravity = 240
 
-	root.CFrame = CFrame.new(targetPos + Vector3.new(0, 10, 0))
+    root.CFrame = CFrame.new(624, 1090 + 10, 750.5)
 
-	task.wait(1)
+    task.wait(1)
 
-	workspace.Gravity = oldGravity
-	root.CFrame = originalCF
+    workspace.Gravity = oldGravity
+    root.CFrame = originalCF
 end
 
 tweenPositions()
