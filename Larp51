@@ -736,36 +736,73 @@ end
 })
 
 local Button = Tab:CreateButton({
-   Name = "Jack",
-   Callback = function()
-local jack = game:GetService("Workspace"):FindFirstChild("Jack O' Lantern")
+    Name = "Get Reaper's Gun (Auto)",
+    Callback = function()
+        local player = game:GetService("Players").LocalPlayer
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        local reaper = game:GetService("Workspace"):FindFirstChild("Reaper")
+        
+        if root then
+            if not reaper or not reaper:FindFirstChild("Zombie") then
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "Reaper",
+                    Text = "Dead! Teleporting to gun...",
+                    Duration = 3
+                })
+                
+                teleportToLobby(root)
+                local reaperGun = game:GetService("Workspace"):FindFirstChild("GetReaperGun")
+                if reaperGun then
+                    root.CFrame = reaperGun.CFrame
+                    task.wait(0.1)
+                    firetouchinterest(root, reaperGun, 0)
+                    firetouchinterest(root, reaperGun, 1)
+                end
+            else
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "Reaper",
+                    Text = "Reaper is still alive!",
+                    Duration = 5
+                })
+            end
+        end
+    end,
+})
 
-local function outline(model)
-    if model and model:FindFirstChild("HumanoidRootPart") then
-        local highlight = Instance.new("Highlight")
-        highlight.Parent = model
-        highlight.FillTransparency = 1
-        highlight.OutlineColor = Color3.fromRGB(255, 0, 0)
-        task.wait(5)
-        highlight:Destroy()
-    end
-end
-
-if jack and jack:FindFirstChild("Zombie") then
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Jack O' Lantern",
-        Text = "Health: " .. math.floor(jack.Zombie.Health),
-        Duration = 5
-    })
-    outline(jack)
-else
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Jack O' Lantern",
-        Text = "Dead",
-        Duration = 5
-    })
-end
-   end,
+local Button = Tab:CreateButton({
+    Name = "Get Sheriff's Revolver (Auto)",
+    Callback = function()
+        local player = game:GetService("Players").LocalPlayer
+        local char = player.Character
+        local root = char and char:FindFirstChild("HumanoidRootPart")
+        local jack = game:GetService("Workspace"):FindFirstChild("Jack O' Lantern")
+        
+        if root then
+            if not jack or not jack:FindFirstChild("Zombie") then
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "Jack O' Lantern",
+                    Text = "Dead! Teleporting to gun...",
+                    Duration = 3
+                })
+                
+                teleportToLobby(root)
+                local jackGun = game:GetService("Workspace"):FindFirstChild("GetJackGun")
+                if jackGun then
+                    root.CFrame = jackGun.CFrame
+                    task.wait(0.1)
+                    firetouchinterest(root, jackGun, 0)
+                    firetouchinterest(root, jackGun, 1)
+                end
+            else
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "Jack O' Lantern",
+                    Text = "Jack is still alive!",
+                    Duration = 5
+                })
+            end
+        end
+    end,
 })
 
 local Divider = Tab:CreateDivider()
