@@ -1,0 +1,15 @@
+local jack = game:GetService("Workspace"):FindFirstChild("Jack O' Lantern")
+
+if jack and jack:FindFirstChild("Zombie") then
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Jack O' Lantern",
+        Text = "Health: " .. math.floor(jack.Zombie.Health),
+        Duration = 5
+    })
+else
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Jack O' Lantern",
+        Text = "Dead",
+        Duration = 5
+    })
+end
