@@ -3,7 +3,7 @@ local player = game.Players.LocalPlayer
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Survive in Area 51 GUI",
+   Name = "Larp in Area 51 GUI",
    Icon = 0, 
    LoadingTitle = "Rayfield Interface Suite",
    LoadingSubtitle = "by Sirius",
@@ -51,11 +51,11 @@ local function resetCharacter()
     end
 end
 
-local Tab = Window:CreateTab("Survive in Area 51", 4483362458) 
+local Tab = Window:CreateTab("Larp tools", 4483362458) 
 
-local Section = Tab:CreateSection("Survive in Area 51")
+local Section = Tab:CreateSection("Larp")
 
-Section:Set("Survive in Area 51")
+Section:Set("Larp")
 
 local Button = Tab:CreateButton({
    Name = "Inf Yield",
