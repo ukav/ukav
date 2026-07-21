@@ -8,7 +8,6 @@ local Window = Rayfield:CreateWindow({
    LoadingTitle = "Rayfield Interface Suite",
    LoadingSubtitle = "by Sirius",
    ShowText = "Rayfield", 
-   Theme = "Default", 
 
    ToggleUIKeybind = "G", 
 
@@ -16,39 +15,44 @@ local Window = Rayfield:CreateWindow({
    DisableBuildWarnings = false, 
 
    ConfigurationSaving = {
-      Enabled = true,
-      FolderName = nil, 
-      FileName = "Big Hub"
+     Enabled = true,
+     FolderName = nil, 
+     FileName = "Big Hub"
    },
 
    Discord = {
-      Enabled = false, 
-      Invite = "noinvitelink", 
-      RememberJoins = true 
+     Enabled = false, 
+     Invite = "noinvitelink", 
+     RememberJoins = true 
    },
 
    KeySystem = false, 
    KeySettings = {
-      Title = "Untitled",
-      Subtitle = "Key System",
-      Note = "No method of obtaining the key is provided", 
-      FileName = "Key", 
-      SaveKey = true, 
-      GrabKeyFromSite = false, 
-      Key = {"Hello"} 
+     Title = "Untitled",
+     Subtitle = "Key System",
+     Note = "No method of obtaining the key is provided", 
+     FileName = "Key", 
+     SaveKey = true, 
+     GrabKeyFromSite = false, 
+     Key = {"Hello"} 
    }
 })
 
--- Local helper function to safely reset character
+-- Local helper functions
 local function resetCharacter()
-    task.wait(0.5)
-    local char = player.Character
-    if char then
-        local humanoid = char:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid.Health = 0
-        end
-    end
+   task.wait(0.5)
+   local char = player.Character
+   if char then
+       local humanoid = char:FindFirstChildOfClass("Humanoid")
+       if humanoid then
+           humanoid.Health = 0
+       end
+   end
+end
+
+local function teleportToLobby(root)
+    root.CFrame = CFrame.new(624, 1090, 750.5)
+    task.wait(1.5)
 end
 
 local Tab = Window:CreateTab("Larp tools", 4483362458) 
@@ -159,9 +163,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local targetPart = game:GetService("Workspace")["Floor 2"].GetHEXGun.Head
         firetouchinterest(root, targetPart, 0)
@@ -178,9 +180,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local targetPart = game:GetService("Workspace"):WaitForChild("Exit")
         firetouchinterest(root, targetPart, 0)
@@ -197,9 +197,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local targetPart = game:GetService("Workspace"):WaitForChild("LavaZone"):WaitForChild("Escape"):WaitForChild("Head")
         firetouchinterest(root, targetPart, 0)
@@ -216,9 +214,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local targetPart = game:GetService("Workspace"):WaitForChild("IceZone"):WaitForChild("GetIceCrossbow"):WaitForChild("Head")
         firetouchinterest(root, targetPart, 0)
@@ -235,9 +231,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local targetPart = game:GetService("Workspace"):WaitForChild("Floor 2"):WaitForChild("GetRedMissile"):WaitForChild("Head")
         firetouchinterest(root, targetPart, 0) 
@@ -254,9 +248,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         root.CFrame = CFrame.new(-19, 1057, 1160)
         task.wait(0.5)
@@ -306,9 +298,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local targetPart = game:GetService("Workspace").GetReaperGun
         firetouchinterest(root, targetPart, 0)
@@ -325,9 +315,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local targetPart = game:GetService("Workspace").GetJackGun
         firetouchinterest(root, targetPart, 0)
@@ -345,9 +333,7 @@ local Button = Tab:CreateButton({
         local root = char:WaitForChild("HumanoidRootPart")
         local camera = workspace.CurrentCamera
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         -- First prompt position
         root.CFrame = CFrame.new(-443, 971, -196)
@@ -416,9 +402,9 @@ local Button = Tab:CreateButton({
        local LocalPlayer = Players.LocalPlayer
        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
        local root = char:WaitForChild("HumanoidRootPart")
-       local targetPos = Vector3.new(624, 1090, 750.5)
-       root.CFrame = CFrame.new(targetPos)
-       task.wait(1.5)
+       
+       teleportToLobby(root)
+       
        local targetPart = workspace:WaitForChild("CorruptedZone"):WaitForChild("RGB - 9999 Cell"):WaitForChild("Head")
        
        firetouchinterest(targetPart, root, 0)
@@ -437,9 +423,7 @@ local Button = Tab:CreateButton({
        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
        local root = char:WaitForChild("HumanoidRootPart")
 
-       local targetPos = Vector3.new(624, 1090, 750.5)
-       root.CFrame = CFrame.new(targetPos)
-       task.wait(1.5)
+       teleportToLobby(root)
 
        local targetPart = workspace:WaitForChild("GetScarecrowSkull")
        firetouchinterest(root, targetPart, 0)
@@ -456,9 +440,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local targetPart = game:GetService("Workspace"):WaitForChild("CyberLand"):WaitForChild("GetMechGun")
         firetouchinterest(root, targetPart, 0)
@@ -475,9 +457,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local targetPart = game:GetService("Workspace"):WaitForChild("GetCrescendo")
         firetouchinterest(root, targetPart, 0)
@@ -494,9 +474,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local exitHead = game:GetService("Workspace"):WaitForChild("NightCity"):WaitForChild("Exit"):WaitForChild("Head")
         firetouchinterest(root, exitHead, 0)
@@ -513,9 +491,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local targetHead = game:GetService("Workspace"):WaitForChild("DeadGround"):WaitForChild("LXD - 9999 Cell"):WaitForChild("Head")
         firetouchinterest(root, targetHead, 0)
@@ -532,9 +508,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local targetPos = Vector3.new(624, 1090, 750.5)
-        root.CFrame = CFrame.new(targetPos)
-        task.wait(1.5)
+        teleportToLobby(root)
 
         local targetHead = game:GetService("Workspace").MazeWorld["ESCAPE FROM THIS HELL"].Head
         firetouchinterest(root, targetHead, 0)
