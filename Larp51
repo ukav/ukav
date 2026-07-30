@@ -384,41 +384,51 @@ local Section = Tab:CreateSection("Weapons")
 
 Section:Set("Event Weapons")
 
+local Section = Tab:CreateSection("Event Weapons")
+
 local Button = Tab:CreateButton({
-   Name = "Get RGB",
-   Callback = function()
-       local Players = game:GetService("Players")
-       local LocalPlayer = Players.LocalPlayer
-       local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-       local root = char:WaitForChild("HumanoidRootPart")
-       
-       teleportToLobby(root)
-       
-       local targetPart = workspace:WaitForChild("CorruptedZone"):WaitForChild("RGB - 9999 Cell"):WaitForChild("Head")
-       
-       firetouchinterest(targetPart, root, 0)
-       task.wait(0.1)
-       firetouchinterest(targetPart, root, 1)
-       
-       resetCharacter()
-   end,
+    Name = "Get RGB",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        firetouchinterest(root, portal, 0)
+        firetouchinterest(root, portal, 1)
+        task.wait(1)
+
+        teleportToLobby(root)
+        
+        local targetPart = workspace:WaitForChild("CorruptedZone"):WaitForChild("RGB - 9999 Cell"):WaitForChild("Head")
+        
+        firetouchinterest(targetPart, root, 0)
+        task.wait(0.1)
+        firetouchinterest(targetPart, root, 1)
+        
+        resetCharacter()
+    end,
 })
 
 local Button = Tab:CreateButton({
-   Name = "Get Scarecrow's Skull",
-   Callback = function()
-       local Players = game:GetService("Players")
-       local LocalPlayer = Players.LocalPlayer
-       local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-       local root = char:WaitForChild("HumanoidRootPart")
+    Name = "Get Scarecrow's Skull",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        firetouchinterest(root, portal, 0)
+        firetouchinterest(root, portal, 1)
+        task.wait(1)
 
-       teleportToLobby(root)
+        teleportToLobby(root)
 
-       local targetPart = workspace:WaitForChild("GetScarecrowSkull")
-       firetouchinterest(root, targetPart, 0)
-       firetouchinterest(root, targetPart, 1)
-       resetCharacter()
-   end,
+        local targetPart = workspace:WaitForChild("GetScarecrowSkull")
+        firetouchinterest(root, targetPart, 0)
+        firetouchinterest(root, targetPart, 1)
+        resetCharacter()
+    end,
 })
 
 local Button = Tab:CreateButton({
@@ -428,6 +438,10 @@ local Button = Tab:CreateButton({
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        firetouchinterest(root, portal, 0)
+        firetouchinterest(root, portal, 1)
+        task.wait(1)
 
         teleportToLobby(root)
 
@@ -445,6 +459,10 @@ local Button = Tab:CreateButton({
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        firetouchinterest(root, portal, 0)
+        firetouchinterest(root, portal, 1)
+        task.wait(1)
 
         teleportToLobby(root)
 
@@ -462,6 +480,10 @@ local Button = Tab:CreateButton({
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        firetouchinterest(root, portal, 0)
+        firetouchinterest(root, portal, 1)
+        task.wait(1)
 
         teleportToLobby(root)
 
@@ -479,6 +501,10 @@ local Button = Tab:CreateButton({
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        firetouchinterest(root, portal, 0)
+        firetouchinterest(root, portal, 1)
+        task.wait(1)
 
         teleportToLobby(root)
 
@@ -496,6 +522,10 @@ local Button = Tab:CreateButton({
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        firetouchinterest(root, portal, 0)
+        firetouchinterest(root, portal, 1)
+        task.wait(1)
 
         teleportToLobby(root)
 
@@ -511,10 +541,18 @@ local Tab = Window:CreateTab("Teleport", 4483362458)
 local Button = Tab:CreateButton({
     Name = "Portal",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Portal", true))()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+
+        firetouchinterest(root, portal, 0)
+        firetouchinterest(root, portal, 1)
     end,
 })
-
 local Button = Tab:CreateButton({
     Name = "Return to Base",
     Callback = function()
