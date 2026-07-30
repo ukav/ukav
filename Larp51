@@ -511,7 +511,7 @@ local Tab = Window:CreateTab("Teleport", 4483362458)
 local Button = Tab:CreateButton({
     Name = "Portal",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/Folder/refs/heads/main/Portal", true))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Portal", true))()
     end,
 })
 
