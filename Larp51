@@ -289,9 +289,7 @@ local Button = Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
         local camera = workspace.CurrentCamera
-
         teleportToLobby(root)
-
         local function getNearestPrompt()
             local nearest, shortest = nil, math.huge
             for _, v in pairs(workspace:GetDescendants()) do
@@ -308,10 +306,9 @@ local Button = Tab:CreateButton({
             end
             return nearest
         end
-
         local function spamPrompt(prompt)
             local startTime = tick()
-            while tick() - startTime < 0.5 do
+            while tick() - startTime < 0.1 do
                 prompt:InputHoldBegin()
                 prompt:InputHoldEnd()
                 task.wait()
@@ -319,15 +316,29 @@ local Button = Tab:CreateButton({
         end
 
         camera.CFrame = CFrame.new(-21.78557, 1077.18481, 1155.81604, -0.89803, 0.43326, -0.07639, 0.00000, 0.17365, 0.98481, 0.43994, 0.88438, -0.15594)
-        root.CFrame = CFrame.new(-20, 1056, 1159)
-        
-        local prompt = getNearestPrompt()
-        if prompt then
-            spamPrompt(prompt)
+
+        local waypoints = {
+            Vector3.new(-268, 1052, 1128),
+            Vector3.new(-268, 1052, 1189),
+            Vector3.new(-174, 1062, 1138),
+            Vector3.new(-174, 1062, 1178),
+            Vector3.new(-134, 1062, 1178),
+            Vector3.new(-135, 1062, 1139),
+            Vector3.new(-20, 1052, 1159),
+        }
+
+        for _, pos in ipairs(waypoints) do
+            root.CFrame = CFrame.new(pos)
+            task.wait(0.1)
+
+            local prompt = getNearestPrompt()
+            if prompt then
+                spamPrompt(prompt)
+            end
         end
 
         root.CFrame = CFrame.new(63, 1079, 1159)
-        
+
         resetCharacter()
     end,
 })
