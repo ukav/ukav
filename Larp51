@@ -146,7 +146,7 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
-    Name = "Gun mod",
+    Name = "Delete entrance",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/entrance%20delete", true))()
     end,
