@@ -315,7 +315,7 @@ local Button = Tab:CreateButton({
             end
         end
 
-        camera.CFrame = CFrame.new(-21.78557, 1077.18481, 1155.81604, -0.89803, 0.43326, -0.07639, 0.00000, 0.17365, 0.98481, 0.43994, 0.88438, -0.15594)
+        camera.CFrame = CFrame.new(598, 1166, 759, 1, 0, 0, 0, 0, 1, 0, 1, 0)
 
         local waypoints = {
             Vector3.new(-268, 1052, 1128),
