@@ -1,0 +1,30 @@
+-- Deletes the known ground parts in the target box, on execute.
+local Ground = workspace:FindFirstChild("Ground")
+if not Ground then
+    warn("[DeleteParts] Workspace.Ground not found")
+    return
+end
+
+local c1 = Vector3.new(654, 1148, 719)
+local c2 = Vector3.new(594, 1148, 782)
+local minV = Vector3.new(math.min(c1.X, c2.X), math.min(c1.Y, c2.Y) - 3, math.min(c1.Z, c2.Z))
+local maxV = Vector3.new(math.max(c1.X, c2.X), math.max(c1.Y, c2.Y) + 3, math.max(c1.Z, c2.Z))
+local center = (minV + maxV) / 2
+local size = (maxV - minV)
+
+local params = OverlapParams.new()
+params.FilterType = Enum.RaycastFilterType.Include
+params.FilterDescendantsInstances = {Ground}
+params.MaxParts = 5000
+
+local found = workspace:GetPartBoundsInBox(CFrame.new(center), size, params)
+
+local deleted = 0
+for _, part in ipairs(found) do
+    if part.Name == "Part" then
+        part:Destroy()
+        deleted += 1
+    end
+end
+
+print(string.format("[DeleteParts] deleted %d part(s)", deleted))
