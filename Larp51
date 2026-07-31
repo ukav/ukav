@@ -145,6 +145,13 @@ local Button = Tab:CreateButton({
     end,
 })
 
+local Button = Tab:CreateButton({
+    Name = "Gun mod",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/entrance%20delete", true))()
+    end,
+})
+
 local Divider = Tab:CreateDivider()
 
 ------------------------------------------------------------------------
@@ -383,8 +390,6 @@ local Divider = Tab:CreateDivider()
 local Section = Tab:CreateSection("Weapons")
 
 Section:Set("Event Weapons")
-
-local Section = Tab:CreateSection("Event Weapons")
 
 local Button = Tab:CreateButton({
     Name = "Get RGB",
