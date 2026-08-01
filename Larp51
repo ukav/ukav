@@ -3,6 +3,8 @@ local player = game.Players.LocalPlayer
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 getgenv().AuraT=false;getgenv().AuraR=20;game:GetService("RunService").RenderStepped:Connect(function() local c=game.Players.LocalPlayer.Character if c and getgenv().AuraT then for _,v in ipairs(c:GetChildren()) do if v:IsA("Tool") then v.GripPos=Vector3.new(300,300,300) end end end end);task.spawn(function() while task.wait(0.05) do if getgenv().AuraT then local lp=game.Players.LocalPlayer; local ch=lp.Character; local hrp=ch and ch:FindFirstChild("HumanoidRootPart") if hrp then local g={}; for _,i in ipairs(ch:GetChildren()) do if i:IsA("Tool") and i.Name=="Gun_Gun" and i:FindFirstChild("GunScript_Server") then table.insert(g,i) end end; for _,i in ipairs(lp.Backpack:GetChildren()) do if i:IsA("Tool") and i.Name=="Gun_Gun" and i:FindFirstChild("GunScript_Server") then table.insert(g,i) end end; local f=false; for _,z in ipairs({"Castle","DeadGround","CorruptedZone","NightCity","MIS"}) do local zn=workspace:FindFirstChild(z) if zn then for _,n in ipairs(zn:GetChildren()) do if n:IsA("Model") and not game.Players:GetPlayerFromCharacter(n) then local rt=n:FindFirstChild("HumanoidRootPart") or n:FindFirstChild("Torso") if rt and (rt.Position-hrp.Position).Magnitude<=getgenv().AuraR then f=true; for _,gun in ipairs(g) do if gun.Parent~=ch then gun.Parent=ch end; local rm=gun.GunScript_Server.InflictTarget if rm then for _=1,4 do pcall(function() rm:FireServer("Head",n:FindFirstChildOfClass("Humanoid"),rt,gun,Vector3.zero) end) end end end end end end end end; for _,n in ipairs(workspace:GetChildren()) do if n:IsA("Model") and not game.Players:GetPlayerFromCharacter(n) then local rt=n:FindFirstChild("HumanoidRootPart") or n:FindFirstChild("Torso") if rt and (rt.Position-hrp.Position).Magnitude<=getgenv().AuraR then f=true; for _,gun in ipairs(g) do if gun.Parent~=ch then gun.Parent=ch end; local rm=gun.GunScript_Server.InflictTarget if rm then for _=1,4 do pcall(function() rm:FireServer("Head",n:FindFirstChildOfClass("Humanoid"),rt,gun,Vector3.zero) end) end end end end end end; if not f then for _,gun in ipairs(g) do if gun.Parent==ch then gun.Parent=lp.Backpack end end end end end end end)
+getgenv().AutoHealT = false; game:GetService("RunService").RenderStepped:Connect(function() if not getgenv().AutoHealT then return end local ch = game.Players.LocalPlayer.Character if ch then for _, v in ipairs(ch:GetChildren()) do if v:IsA("Tool") and v.Name == "Cleansed Rifle" then v.GripPos = Vector3.new(300,300,300) end end end end); task.spawn(function() while task.wait(0.1) do if getgenv().AutoHealT then local lp = game.Players.LocalPlayer; local ch, hum = lp.Character, lp.Character and lp.Character:FindFirstChildOfClass("Humanoid") local r = lp.Backpack:FindFirstChild("Cleansed Rifle") or (ch and ch:FindFirstChild("Cleansed Rifle")) if hum and r then if r.Parent ~= ch then r.Parent = ch end local ev = r:FindFirstChild("GunScript_Server") and r.GunScript_Server:FindFirstChild("InflictTarget") if ev then ev:FireServer("Torso", hum, ch and (ch:FindFirstChild("Torso") or ch:FindFirstChild("UpperTorso")), r, Vector3.new(0.41955700516701, -0.16235166788101, 0.89309215545654)) end end end end end)
+getgenv().GodmodeT = false; local t = {}; local function r() for k in pairs(t) do if k and k.Parent then k.CanTouch = true end end; t = {} end; task.spawn(function() while task.wait(0.1) do if getgenv().GodmodeT then local h = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") if h then for _, v in ipairs(workspace:GetPartBoundsInRadius(h.Position, 10)) do if v.CanTouch then v.CanTouch = false; t[v] = true end end end else r() end end end); game.Players.LocalPlayer.CharacterAdded:Connect(r)
 
 local Window = Rayfield:CreateWindow({
    Name = "Larp in Area 51 GUI",
@@ -81,7 +83,6 @@ end)
    end,
 })
 
--- Replace your old "Aura" button with these:
 Tab:CreateToggle({
    Name = "Enable Aura",
    CurrentValue = false,
@@ -103,25 +104,36 @@ Tab:CreateSlider({
    end,
 })
 
+Tab:CreateToggle({
+   Name = "Enable Auto Heal",
+   CurrentValue = false,
+   Flag = "AutoHealToggle",
+   Callback = function(Value)
+      getgenv().AutoHealT = Value
+   end,
+})
+
 local Button = Tab:CreateButton({
     Name = "Bypass",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/AntiCheat-Bypass", true))()
+        local p,w=game:GetService("Players").LocalPlayer,game:GetService("Workspace");task.spawn(function() local r=p.Character:WaitForChild("HumanoidRootPart"); local e=w:FindFirstChild("Ground") and w.Ground:FindFirstChild("Entrance"); while e and e.CanCollide do r.CFrame=CFrame.new(624,1090,750.5); task.wait(1.5); end; end); local r,o,g=p.Character:WaitForChild("HumanoidRootPart"),p.Character.HumanoidRootPart.CFrame,w.Gravity; w.Gravity=240; r.CFrame=CFrame.new(624,1100,750.5); task.wait(1); w.Gravity=g; r.CFrame=o;
     end,
 })
 
 local Button = Tab:CreateButton({
     Name = "Mimicbox Detector",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Mimicbox%20Detector", true))()
+        local h=function(o) if (o:IsA("BasePart") or o:IsA("Model")) and not o:FindFirstChild("MimicWarningHighlight") then local x=Instance.new("Highlight");x.Name="MimicWarningHighlight";x.FillColor=Color3.fromRGB(255,0,0);x.OutlineColor=Color3.fromRGB(255,0,0);x.FillTransparency=0.5;x.OutlineTransparency=0;x.Parent=o end end; for _,o in ipairs(workspace:GetDescendants()) do if o.Name=="MimicBox" then h(o) end end; workspace.DescendantAdded:Connect(function(o) if o.Name=="MimicBox" then h(o) end end)
     end,
 })
 
-local Button = Tab:CreateButton({
-    Name = "God mode",
-    Callback = function()
-        if getgenv().GodmodeStop then getgenv().GodmodeStop() return end local p, a, t = game:GetService("Players").LocalPlayer, true, {} local r; r = function() for k in pairs(t) do if k and k.Parent then k.CanTouch = true end end t = {} end getgenv().GodmodeStop = function() a = false; r(); getgenv().GodmodeStop = nil end task.spawn(function() while a do local h = p.Character and p.Character:FindFirstChild("HumanoidRootPart") if h then for _, v in ipairs(workspace:GetPartBoundsInRadius(h.Position, 10)) do if v.CanTouch then v.CanTouch = false; t[v] = true end end end task.wait(0.1) end end) p.CharacterAdded:Connect(r)
-    end,
+Tab:CreateToggle({
+   Name = "Enable God Mode",
+   CurrentValue = false,
+   Flag = "GodmodeToggle",
+   Callback = function(Value)
+      getgenv().GodmodeT = Value
+   end,
 })
 
 local Button = Tab:CreateButton({
@@ -135,13 +147,6 @@ local Button = Tab:CreateButton({
     Name = "Anim",
     Callback = function()
         local P=game:GetService("Players");local UIS=game:GetService("UserInputService");local L=P.LocalPlayer;local A={idle="http://www.roblox.com/asset/?id=180435571",walk="http://www.roblox.com/asset/?id=180426354",jump="http://www.roblox.com/asset/?id=125750702",fall="http://www.roblox.com/asset/?id=180436148"};local MK={[Enum.KeyCode.W]=true,[Enum.KeyCode.A]=true,[Enum.KeyCode.S]=true,[Enum.KeyCode.D]=true};if _G.__animControllerCleanup then _G.__animControllerCleanup() end;local AC={};local function Cl() for _,c in ipairs(AC) do c:Disconnect() end;table.clear(AC) end;_G.__animControllerCleanup=Cl;local function St(Ch) Cl();local function DA(c) local a=c:FindFirstChild("Animate") if a and a:IsA("Script") then a.Disabled=true end end;Ch.ChildAdded:Connect(DA);DA(Ch:FindFirstChild("Animate"));local H=Ch:WaitForChild("Humanoid");local An=H:WaitForChild("Animator");local Lo={};for n,id in pairs(A) do local an=Instance.new("Animation");an.AnimationId=id;Lo[n]=An:LoadAnimation(an) end;local PM=0;local CT=nil;local function Pl(n) if CT==Lo[n] and CT.IsPlaying then return end;if CT then CT:Stop(0.1) end;CT=Lo[n];CT:Play(0.1) end;table.insert(AC,An.AnimationPlayed:Connect(function(t) if t~=Lo.idle and t~=Lo.walk and t~=Lo.jump and t~=Lo.fall then t:Stop(0) end end));table.insert(AC,UIS.InputBegan:Connect(function(i,g) if g then return end;if MK[i.KeyCode] then PM+=1 end end));table.insert(AC,UIS.InputEnded:Connect(function(i) if MK[i.KeyCode] then PM=math.max(0,PM-1) end end));table.insert(AC,H.StateChanged:Connect(function(_,s) if s==Enum.HumanoidStateType.Jumping then Pl("jump") elseif s==Enum.HumanoidStateType.Freefall then Pl("fall") end end));table.insert(AC,H.Running:Connect(function(s) if s>0.5 then Pl(PM>0 and "walk" or "idle") else Pl("idle") end end)) end;L.CharacterAdded:Connect(function(Ch) task.wait(0.5);St(Ch) end);if L.Character then task.wait(0.5);St(L.Character) end
-    end,
-})
-
-local Button = Tab:CreateButton({
-    Name = "NPCs Notifier",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/NPCs-Notifier", true))()
     end,
 })
 
