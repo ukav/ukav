@@ -1,42 +1,26 @@
-local running = true
+local function highlight(box)
+    if not box:IsA("BasePart") and not box:IsA("Model") then return end
+    if box:FindFirstChild("MimicWarningHighlight") then return end
 
-local function addFakeTag(mimic)
-    if mimic:FindFirstChild("FakeBillboard") then return end
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = "FakeBillboard"
-    billboard.Adornee = mimic
-    billboard.Size = UDim2.new(0, 100, 0, 50)
-    billboard.StudsOffset = Vector3.new(0, 3, 0)
-    billboard.AlwaysOnTop = true
-    billboard.MaxDistance = 30
-
-    local textLabel = Instance.new("TextLabel", billboard)
-    textLabel.Size = UDim2.new(1, 0, 1, 0)
-    textLabel.BackgroundTransparency = 1
-    textLabel.Text = "Fake"
-    textLabel.TextColor3 = Color3.new(1, 1, 1)
-    textLabel.TextStrokeTransparency = 1
-    textLabel.TextScaled = true
-    textLabel.Font = Enum.Font.ArialBold
-
-    billboard.Parent = mimic
+    local h = Instance.new("Highlight")
+    h.Name = "MimicWarningHighlight"
+    h.FillColor = Color3.fromRGB(255, 0, 0)
+    h.OutlineColor = Color3.fromRGB(255, 0, 0)
+    h.FillTransparency = 0.5
+    h.OutlineTransparency = 0
+    h.Parent = box
 end
 
-local tracked = {}
-
-coroutine.wrap(function()
-    while running do
-        for _, obj in pairs(workspace:GetChildren()) do
-            if obj.Name == "MimicBox" and not tracked[obj] then
-                addFakeTag(obj)
-                tracked[obj] = true
-                obj.AncestryChanged:Connect(function(_, parent)
-                    if not parent then
-                        tracked[obj] = nil
-                    end
-                end)
-            end
-        end
-        wait(1)
+-- Highlight any MimicBox already in the game
+for _, obj in ipairs(workspace:GetDescendants()) do
+    if obj.Name == "MimicBox" then
+        highlight(obj)
     end
-end)()
+end
+
+-- Catch any MimicBox that spawns later
+workspace.DescendantAdded:Connect(function(obj)
+    if obj.Name == "MimicBox" then
+        highlight(obj)
+    end
+end)
