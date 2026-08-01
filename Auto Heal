@@ -1,0 +1,103 @@
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local CloseButton = Instance.new("TextButton")
+local TextButton = Instance.new("TextButton")
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.ResetOnSpawn = false
+
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
+Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(1, -173, 0, 50)
+Frame.Size = UDim2.new(0, 163, 0, 82)
+Frame.Active = true
+Frame.Draggable = true
+
+TextLabel.Name = "AutoHealPad"
+TextLabel.Parent = Frame
+TextLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.BorderSizePixel = 0
+TextLabel.Size = UDim2.new(0, 140, 0, 23)
+TextLabel.Font = Enum.Font.SourceSansBold
+TextLabel.Text = "Auto Heal"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 18.000
+
+CloseButton.Name = "CloseButton"
+CloseButton.Parent = Frame
+CloseButton.Size = UDim2.new(0, 23, 0, 23)
+CloseButton.Position = UDim2.new(1, -23, 0, 0)
+CloseButton.BackgroundTransparency = 1
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Font = Enum.Font.SourceSansBold
+CloseButton.TextSize = 18
+CloseButton.AutoButtonColor = true
+
+TextButton.Parent = Frame
+TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(0.175, 0, 0.4, 0)
+TextButton.Size = UDim2.new(0, 104, 0, 31)
+TextButton.Font = Enum.Font.SourceSansItalic
+TextButton.Text = "OFF"
+TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.TextSize = 15.000
+
+local player = game.Players.LocalPlayer
+local toggle = false
+
+coroutine.wrap(function()
+    while true do
+        if toggle then
+            local char = player.Character
+            local hum = char and char:FindFirstChildOfClass("Humanoid")
+            local torso = char and (char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso"))
+            
+            -- Tool search: check backpack or character
+            local tool = player.Backpack:FindFirstChild("Cleansed Rifle") or (char and char:FindFirstChild("Cleansed Rifle"))
+            
+            if hum and tool then
+                if hum.Health < 100 then
+                    -- Equip if not currently equipped
+                    if tool.Parent ~= char then
+                        hum:EquipTool(tool)
+                    end
+                    
+                    -- Spam logic
+                    local event = tool:FindFirstChild("GunScript_Server") and tool.GunScript_Server:FindFirstChild("InflictTarget")
+                    if event then
+                        event:FireServer(
+                            "Torso",
+                            hum,
+                            torso,
+                            tool,
+                            Vector3.new(0.41955700516701, -0.16235166788101, 0.89309215545654)
+                        )
+                    end
+                    task.wait(0.1) -- 0.1s delay for spam
+                elseif hum.Health >= 100 then
+                    -- Unequip if full health
+                    hum:UnequipTools()
+                end
+            end
+        end
+        task.wait(0.1)
+    end
+end)()
+
+TextButton.MouseButton1Click:Connect(function()
+    toggle = not toggle
+    TextButton.Text = toggle and "ON" or "OFF"
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+    toggle = false
+    ScreenGui:Destroy()
+end)
