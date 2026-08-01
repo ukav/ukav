@@ -70,7 +70,7 @@ Tab:CreateToggle({
    CurrentValue = false,
    Flag = "AuraToggle",
    Callback = function(Value)
-      toggle = Value
+      getgenv().AuraT = Value
    end,
 })
 
@@ -82,7 +82,7 @@ Tab:CreateSlider({
    CurrentValue = 20,
    Flag = "AuraRadius",
    Callback = function(Value)
-      radius = Value
+      getgenv().AuraR = Value
    end,
 })
 
@@ -103,7 +103,6 @@ Tab:CreateToggle({
       getgenv().AutoHealT = Value
    end,
 })
-
 local Button = Tab:CreateButton({
    Name = "Inf Yield",
    Callback = function()
