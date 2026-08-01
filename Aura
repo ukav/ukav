@@ -13,11 +13,13 @@ local zones = {"Castle", "DeadGround", "CorruptedZone", "NightCity", "MIS"}
 
 local function getGuns()
     local guns, char, bp = {}, LocalPlayer.Character, LocalPlayer.Backpack
+    -- Check Character
     for _, item in ipairs(char:GetChildren()) do
         if item:IsA("Tool") and wantedGuns[item.Name] and item:FindFirstChild("GunScript_Server") then
             guns[#guns+1] = item
         end
     end
+    -- Check Backpack
     for _, item in ipairs(bp:GetChildren()) do
         if item:IsA("Tool") and wantedGuns[item.Name] and item:FindFirstChild("GunScript_Server") then
             guns[#guns+1] = item
@@ -45,19 +47,17 @@ local function attackAll()
             if not char or not hrp or not hum or hum.Health <= 0 then task.wait(0.3) continue end
 
             local foundTarget = false
+            local allWantedGuns = getGuns()
 
             local function blast(npc)
-                local gunInBackpack = LocalPlayer.Backpack:FindFirstChild("Gun_Gun")
-                if gunInBackpack and not char:FindFirstChild("Gun_Gun") then
-                    hum:EquipTool(gunInBackpack)
-                end
-
                 local targetHum = npc:FindFirstChildOfClass("Humanoid")
                 local root = npc:FindFirstChild("HumanoidRootPart") or npc:FindFirstChild("Torso")
                 if not targetHum or not root then return end
                 
-                local guns = getGuns()
-                for _, gun in ipairs(guns) do
+                for _, gun in ipairs(allWantedGuns) do
+                    -- Surgical Equip: Move only specific guns to Character
+                    if gun.Parent ~= char then gun.Parent = char end
+                    
                     local remote = gun:FindFirstChild("GunScript_Server") and gun.GunScript_Server:FindFirstChild("InflictTarget")
                     if remote then
                         for _ = 1, 4 do
@@ -69,6 +69,7 @@ local function attackAll()
                 end
             end
 
+            -- Target detection
             for _, zoneName in ipairs(zones) do
                 local zone = workspace:FindFirstChild(zoneName)
                 if zone then
@@ -88,8 +89,11 @@ local function attackAll()
                 end
             end
 
-            if not foundTarget and char:FindFirstChild("Gun_Gun") then
-                hum:UnequipTools()
+            -- Surgical Unequip: Move only wanted guns back to Backpack
+            if not foundTarget then
+                for _, gun in ipairs(allWantedGuns) do
+                    if gun.Parent == char then gun.Parent = LocalPlayer.Backpack end
+                end
             end
         end
         task.wait(0.05)
@@ -98,6 +102,7 @@ end
 
 task.spawn(attackAll)
 
+-- GUI Setup (Kept as you provided)
 local gui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 gui.Name = "AuraGui"
 gui.ResetOnSpawn = false
