@@ -71,21 +71,25 @@ local Button = Tab:CreateButton({
 local Button = Tab:CreateButton({
    Name = "Instant Button",
    Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Instant%20Button", true))()
+   local ProximityPromptService = game:GetService("ProximityPromptService")
+
+ProximityPromptService.PromptShown:Connect(function(prompt)
+    prompt.HoldDuration = 0
+end)
    end,
 })
 
 local Button = Tab:CreateButton({
     Name = "Aura",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Aura", true))()
+        if getgenv().AuraStop then getgenv().AuraStop() return end local rs, pl, lp, a, r, w = game:GetService("RunService"), game:GetService("Players"), game.Players.LocalPlayer, true, 20, {["Gun_Gun"]=true} local c = rs.RenderStepped:Connect(function() if not a then return end local ch = lp.Character if ch then for _, v in ipairs(ch:GetChildren()) do if v:IsA("Tool") then v.GripPos = Vector3.new(300,300,300) end end end end) getgenv().AuraStop = function() a = false; c:Disconnect(); getgenv().AuraStop = nil end local getGuns = function() local g = {} local ch, bp = lp.Character, lp.Backpack if ch then for _, i in ipairs(ch:GetChildren()) do if i:IsA("Tool") and w[i.Name] and i:FindFirstChild("GunScript_Server") then table.insert(g, i) end end end if bp then for _, i in ipairs(bp:GetChildren()) do if i:IsA("Tool") and w[i.Name] and i:FindFirstChild("GunScript_Server") then table.insert(g, i) end end end return g end task.spawn(function() while a do local ch = lp.Character local hrp, hum = ch and ch:FindFirstChild("HumanoidRootPart"), ch and ch:FindFirstChildOfClass("Humanoid") if ch and hrp and hum and hum.Health > 0 then local f = false local guns = getGuns() local blast = function(n) local th, rt = n:FindFirstChildOfClass("Humanoid"), n:FindFirstChild("HumanoidRootPart") or n:FindFirstChild("Torso") if th and rt then for _, g in ipairs(guns) do if g.Parent ~= ch then g.Parent = ch end local rm = g:FindFirstChild("GunScript_Server") and g.GunScript_Server:FindFirstChild("InflictTarget") if rm then for _=1, 4 do pcall(function() rm:FireServer("Head", th, rt, g, Vector3.zero) end) end end end end end for _, z in ipairs({"Castle", "DeadGround", "CorruptedZone", "NightCity", "MIS"}) do local zn = workspace:FindFirstChild(z) if zn then for _, n in ipairs(zn:GetChildren()) do if n:IsA("Model") and not pl:GetPlayerFromCharacter(n) then local h, rt = n:FindFirstChildWhichIsA("Humanoid"), n:FindFirstChild("HumanoidRootPart") or n:FindFirstChild("Torso") if h and rt and h.Health > 0 and (rt.Position - hrp.Position).Magnitude <= r then f = true; task.spawn(blast, n) end end end end end for _, n in ipairs(workspace:GetChildren()) do if n:IsA("Model") and not pl:GetPlayerFromCharacter(n) then local h, rt = n:FindFirstChildWhichIsA("Humanoid"), n:FindFirstChild("HumanoidRootPart") or n:FindFirstChild("Torso") if h and rt and h.Health > 0 and (rt.Position - hrp.Position).Magnitude <= r then f = true; task.spawn(blast, n) end end end if not f then for _, g in ipairs(guns) do if g.Parent == ch then g.Parent = lp.Backpack end end end end task.wait(0.05) end end)
     end,
 })
 
 local Button = Tab:CreateButton({
     Name = "Auto Heal",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Auto%20Heal", true))()
+        if getgenv().AutoHealStop then getgenv().AutoHealStop() return end local p, rs, a = game.Players.LocalPlayer, game:GetService("RunService"), true local c = rs.RenderStepped:Connect(function() if not a then return end local ch = p.Character if ch then for _, v in ipairs(ch:GetChildren()) do if v:IsA("Tool") and v.Name == "Cleansed Rifle" then v.GripPos = Vector3.new(300,300,300) end end end end) getgenv().AutoHealStop = function() a = false; c:Disconnect(); getgenv().AutoHealStop = nil end task.spawn(function() while a do local ch, hum = p.Character, p.Character and p.Character:FindFirstChildOfClass("Humanoid") local r = p.Backpack:FindFirstChild("Cleansed Rifle") or (ch and ch:FindFirstChild("Cleansed Rifle")) if hum and r then if r.Parent ~= ch then r.Parent = ch end local ev = r:FindFirstChild("GunScript_Server") and r.GunScript_Server:FindFirstChild("InflictTarget") if ev then ev:FireServer("Torso", hum, ch and (ch:FindFirstChild("Torso") or ch:FindFirstChild("UpperTorso")), r, Vector3.new(0.41955700516701, -0.16235166788101, 0.89309215545654)) end end task.wait(0.1) end end)
     end,
 })
 
@@ -97,20 +101,6 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
-    Name = "Lighting Fix",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Lightning%20Fix", true))()
-    end,
-})
-
-local Button = Tab:CreateButton({
-    Name = "Damage Checker",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Damage-Checker", true))()
-    end,
-})
-
-local Button = Tab:CreateButton({
     Name = "Mimicbox Detector",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Mimicbox%20Detector", true))()
@@ -118,9 +108,16 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
-    Name = "NPCs Autofarm",
+    Name = "God mode",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/NPCs-Autofarm", true))()
+        if getgenv().GodmodeStop then getgenv().GodmodeStop() return end local p, a, t = game:GetService("Players").LocalPlayer, true, {} local r; r = function() for k in pairs(t) do if k and k.Parent then k.CanTouch = true end end t = {} end getgenv().GodmodeStop = function() a = false; r(); getgenv().GodmodeStop = nil end task.spawn(function() while a do local h = p.Character and p.Character:FindFirstChild("HumanoidRootPart") if h then for _, v in ipairs(workspace:GetPartBoundsInRadius(h.Position, 10)) do if v.CanTouch then v.CanTouch = false; t[v] = true end end end task.wait(0.1) end end) p.CharacterAdded:Connect(r)
+    end,
+})
+
+local Button = Tab:CreateButton({
+    Name = "Gun mod",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Gunmod", true))()
     end,
 })
 
@@ -139,23 +136,23 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
-    Name = "God mode",
+    Name = "NPCs Autofarm",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/God%20Mode", true))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/NPCs-Autofarm", true))()
     end,
 })
 
 local Button = Tab:CreateButton({
-    Name = "Gun mod",
+    Name = "Damage Checker",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Gunmod", true))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Damage-Checker", true))()
     end,
 })
 
 local Button = Tab:CreateButton({
-    Name = "Delete entrance",
+    Name = "Lighting Fix",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/entrance%20delete", true))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Lightning%20Fix", true))()
     end,
 })
 
