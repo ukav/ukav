@@ -4,6 +4,12 @@ local LocalPlayer = Players.LocalPlayer
 local toggle = false
 
 local targetNames = {
+-- Boss
+    ["Jack O' Lantern"] = true,
+    ["Reaper"] = true,
+    ["Zombie Brute"] = true,
+
+-- Mobs
     ["Dweller"] = true,
     ["Pale"] = true,
     ["Lurker"] = true,
@@ -21,9 +27,6 @@ local targetNames = {
     ["Golem"] = true,
     ["Rager"] = true,
     ["Frosted"] = true,
-    ["Jack O' Lantern"] = true,
-    ["Reaper"] = true,
-    ["Zombie Brute"] = true,
     ["The Expressionless"] = true,
     ["Drold"] = true,
     ["Guardian"] = true,
@@ -42,10 +45,16 @@ local targetNames = {
     ["Iron"] = true,
     ["Gold"] = true,
     ["Diamond"] = true,
+    ["Snowman"] = true,
+    ["Ice Skeleton"] = true,
+    ["Skeleton"] = true,
+    ["Evoker"] = true,
+    ["Mannequin"] = true,
+    ["Terror"] = true,
 }
 
 local wantedGuns = {
-    ["Screamer"] = true
+    ["Gun_Gun"] = true
 }
 
 local function getGuns()
@@ -116,7 +125,7 @@ local function attackNPCs()
                 end
             end
         end
-        task.wait(0.05)
+        task.wait(0.1)
     end
 end
 
