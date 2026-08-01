@@ -122,6 +122,13 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
+    Name = "Anim",
+    Callback = function()
+        local P=game:GetService("Players");local UIS=game:GetService("UserInputService");local L=P.LocalPlayer;local A={idle="http://www.roblox.com/asset/?id=180435571",walk="http://www.roblox.com/asset/?id=180426354",jump="http://www.roblox.com/asset/?id=125750702",fall="http://www.roblox.com/asset/?id=180436148"};local MK={[Enum.KeyCode.W]=true,[Enum.KeyCode.A]=true,[Enum.KeyCode.S]=true,[Enum.KeyCode.D]=true};if _G.__animControllerCleanup then _G.__animControllerCleanup() end;local AC={};local function Cl() for _,c in ipairs(AC) do c:Disconnect() end;table.clear(AC) end;_G.__animControllerCleanup=Cl;local function St(Ch) Cl();local function DA(c) local a=c:FindFirstChild("Animate") if a and a:IsA("Script") then a.Disabled=true end end;Ch.ChildAdded:Connect(DA);DA(Ch:FindFirstChild("Animate"));local H=Ch:WaitForChild("Humanoid");local An=H:WaitForChild("Animator");local Lo={};for n,id in pairs(A) do local an=Instance.new("Animation");an.AnimationId=id;Lo[n]=An:LoadAnimation(an) end;local PM=0;local CT=nil;local function Pl(n) if CT==Lo[n] and CT.IsPlaying then return end;if CT then CT:Stop(0.1) end;CT=Lo[n];CT:Play(0.1) end;table.insert(AC,An.AnimationPlayed:Connect(function(t) if t~=Lo.idle and t~=Lo.walk and t~=Lo.jump and t~=Lo.fall then t:Stop(0) end end));table.insert(AC,UIS.InputBegan:Connect(function(i,g) if g then return end;if MK[i.KeyCode] then PM+=1 end end));table.insert(AC,UIS.InputEnded:Connect(function(i) if MK[i.KeyCode] then PM=math.max(0,PM-1) end end));table.insert(AC,H.StateChanged:Connect(function(_,s) if s==Enum.HumanoidStateType.Jumping then Pl("jump") elseif s==Enum.HumanoidStateType.Freefall then Pl("fall") end end));table.insert(AC,H.Running:Connect(function(s) if s>0.5 then Pl(PM>0 and "walk" or "idle") else Pl("idle") end end)) end;L.CharacterAdded:Connect(function(Ch) task.wait(0.5);St(Ch) end);if L.Character then task.wait(0.5);St(L.Character) end
+    end,
+})
+
+local Button = Tab:CreateButton({
     Name = "NPCs Notifier",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/NPCs-Notifier", true))()
