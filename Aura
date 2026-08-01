@@ -3,12 +3,13 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 
--- Constant Grip Force Loop
+-- Constant Grip Force Loop (Updated)
 RunService.RenderStepped:Connect(function()
     local char = LocalPlayer.Character
     if char then
         for _, v in ipairs(char:GetChildren()) do
-            if v:IsA("Tool") then
+            -- Now only applies to "Gun_Gun"
+            if v:IsA("Tool") and v.Name == "Gun_Gun" then
                 v.GripPos = Vector3.new(300, 300, 300)
             end
         end
@@ -26,16 +27,18 @@ local zones = {"Castle", "DeadGround", "CorruptedZone", "NightCity", "MIS"}
 
 local function getGuns()
     local guns, char, bp = {}, LocalPlayer.Character, LocalPlayer.Backpack
-    -- Check Character
-    for _, item in ipairs(char:GetChildren()) do
-        if item:IsA("Tool") and wantedGuns[item.Name] and item:FindFirstChild("GunScript_Server") then
-            guns[#guns+1] = item
+    if char then
+        for _, item in ipairs(char:GetChildren()) do
+            if item:IsA("Tool") and wantedGuns[item.Name] and item:FindFirstChild("GunScript_Server") then
+                guns[#guns+1] = item
+            end
         end
     end
-    -- Check Backpack
-    for _, item in ipairs(bp:GetChildren()) do
-        if item:IsA("Tool") and wantedGuns[item.Name] and item:FindFirstChild("GunScript_Server") then
-            guns[#guns+1] = item
+    if bp then
+        for _, item in ipairs(bp:GetChildren()) do
+            if item:IsA("Tool") and wantedGuns[item.Name] and item:FindFirstChild("GunScript_Server") then
+                guns[#guns+1] = item
+            end
         end
     end
     return guns
@@ -68,9 +71,7 @@ local function attackAll()
                 if not targetHum or not root then return end
                 
                 for _, gun in ipairs(allWantedGuns) do
-                    -- Surgical Equip: Move only specific guns to Character
                     if gun.Parent ~= char then gun.Parent = char end
-                    
                     local remote = gun:FindFirstChild("GunScript_Server") and gun.GunScript_Server:FindFirstChild("InflictTarget")
                     if remote then
                         for _ = 1, 4 do
@@ -82,7 +83,6 @@ local function attackAll()
                 end
             end
 
-            -- Target detection
             for _, zoneName in ipairs(zones) do
                 local zone = workspace:FindFirstChild(zoneName)
                 if zone then
@@ -102,7 +102,6 @@ local function attackAll()
                 end
             end
 
-            -- Surgical Unequip: Move only wanted guns back to Backpack
             if not foundTarget then
                 for _, gun in ipairs(allWantedGuns) do
                     if gun.Parent == char then gun.Parent = LocalPlayer.Backpack end
