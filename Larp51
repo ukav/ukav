@@ -83,6 +83,13 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
+   Name = "Auto Heal",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Auto%20Heal", true))()
+   end,
+})
+
+local Button = Tab:CreateButton({
     Name = "Bypass",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/AntiCheat-Bypass", true))()
