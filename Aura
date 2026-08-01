@@ -44,13 +44,19 @@ local function attackAll()
             local hum = char and char:FindFirstChildOfClass("Humanoid")
             if not char or not hrp or not hum or hum.Health <= 0 then task.wait(0.3) continue end
 
-            local guns = getGuns()
-            if #guns == 0 then task.wait(0.3) continue end
+            local foundTarget = false
 
             local function blast(npc)
+                local gunInBackpack = LocalPlayer.Backpack:FindFirstChild("Gun_Gun")
+                if gunInBackpack and not char:FindFirstChild("Gun_Gun") then
+                    hum:EquipTool(gunInBackpack)
+                end
+
                 local targetHum = npc:FindFirstChildOfClass("Humanoid")
                 local root = npc:FindFirstChild("HumanoidRootPart") or npc:FindFirstChild("Torso")
                 if not targetHum or not root then return end
+                
+                local guns = getGuns()
                 for _, gun in ipairs(guns) do
                     local remote = gun:FindFirstChild("GunScript_Server") and gun.GunScript_Server:FindFirstChild("InflictTarget")
                     if remote then
@@ -68,6 +74,7 @@ local function attackAll()
                 if zone then
                     for _, npc in ipairs(zone:GetChildren()) do
                         if valid(npc, char, hrp) then
+                            foundTarget = true
                             task.spawn(blast, npc)
                         end
                     end
@@ -76,8 +83,13 @@ local function attackAll()
 
             for _, npc in ipairs(workspace:GetChildren()) do
                 if valid(npc, char, hrp) then
+                    foundTarget = true
                     task.spawn(blast, npc)
                 end
+            end
+
+            if not foundTarget and char:FindFirstChild("Gun_Gun") then
+                hum:UnequipTools()
             end
         end
         task.wait(0.05)
@@ -86,7 +98,6 @@ end
 
 task.spawn(attackAll)
 
--- GUI Setup
 local gui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 gui.Name = "AuraGui"
 gui.ResetOnSpawn = false
