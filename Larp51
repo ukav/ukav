@@ -65,24 +65,6 @@ end
 
 local Tab = Window:CreateTab("Larp tools", 4483362458) 
 
-local Button = Tab:CreateButton({
-   Name = "Inf Yield",
-   Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source", true))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Instant Button",
-   Callback = function()
-   local ProximityPromptService = game:GetService("ProximityPromptService")
-
-ProximityPromptService.PromptShown:Connect(function(prompt)
-    prompt.HoldDuration = 0
-end)
-   end,
-})
-
 Tab:CreateToggle({
    Name = "Enable Aura",
    CurrentValue = false,
@@ -105,11 +87,38 @@ Tab:CreateSlider({
 })
 
 Tab:CreateToggle({
+   Name = "Enable God Mode",
+   CurrentValue = false,
+   Flag = "GodmodeToggle",
+   Callback = function(Value)
+      getgenv().GodmodeT = Value
+   end,
+})
+
+Tab:CreateToggle({
    Name = "Enable Auto Heal",
    CurrentValue = false,
    Flag = "AutoHealToggle",
    Callback = function(Value)
       getgenv().AutoHealT = Value
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Inf Yield",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source", true))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Instant Button",
+   Callback = function()
+   local ProximityPromptService = game:GetService("ProximityPromptService")
+
+ProximityPromptService.PromptShown:Connect(function(prompt)
+    prompt.HoldDuration = 0
+end)
    end,
 })
 
@@ -125,15 +134,6 @@ local Button = Tab:CreateButton({
     Callback = function()
         local h=function(o) if (o:IsA("BasePart") or o:IsA("Model")) and not o:FindFirstChild("MimicWarningHighlight") then local x=Instance.new("Highlight");x.Name="MimicWarningHighlight";x.FillColor=Color3.fromRGB(255,0,0);x.OutlineColor=Color3.fromRGB(255,0,0);x.FillTransparency=0.5;x.OutlineTransparency=0;x.Parent=o end end; for _,o in ipairs(workspace:GetDescendants()) do if o.Name=="MimicBox" then h(o) end end; workspace.DescendantAdded:Connect(function(o) if o.Name=="MimicBox" then h(o) end end)
     end,
-})
-
-Tab:CreateToggle({
-   Name = "Enable God Mode",
-   CurrentValue = false,
-   Flag = "GodmodeToggle",
-   Callback = function(Value)
-      getgenv().GodmodeT = Value
-   end,
 })
 
 local Button = Tab:CreateButton({
