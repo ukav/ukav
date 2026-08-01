@@ -3,6 +3,7 @@ local Frame = Instance.new("Frame")
 local TextLabel = Instance.new("TextLabel")
 local CloseButton = Instance.new("TextButton")
 local TextButton = Instance.new("TextButton")
+local RunService = game:GetService("RunService") -- Added for the loop
 
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -52,6 +53,18 @@ TextButton.TextSize = 15.000
 
 local player = game.Players.LocalPlayer
 local toggle = false
+
+-- This forces the Cleansed Rifle to move to the offset every frame
+RunService.RenderStepped:Connect(function()
+    local char = player.Character
+    if char then
+        for _, v in ipairs(char:GetChildren()) do
+            if v:IsA("Tool") and v.Name == "Cleansed Rifle" then
+                v.GripPos = Vector3.new(300, 300, 300)
+            end
+        end
+    end
+end)
 
 coroutine.wrap(function()
     while true do
