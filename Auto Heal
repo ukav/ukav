@@ -60,31 +60,36 @@ coroutine.wrap(function()
             local hum = char and char:FindFirstChildOfClass("Humanoid")
             local torso = char and (char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso"))
             
-            -- Tool search: check backpack or character
-            local tool = player.Backpack:FindFirstChild("Cleansed Rifle") or (char and char:FindFirstChild("Cleansed Rifle"))
+            -- Find the rifle in backpack or character
+            local rifle = player.Backpack:FindFirstChild("Cleansed Rifle") or (char and char:FindFirstChild("Cleansed Rifle"))
             
-            if hum and tool then
+            if hum and rifle then
+                -- HEALING MODE
                 if hum.Health < 100 then
-                    -- Equip if not currently equipped
-                    if tool.Parent ~= char then
-                        hum:EquipTool(tool)
+                    -- Only move to character if not already there
+                    if rifle.Parent ~= char then
+                        rifle.Parent = char 
                     end
                     
-                    -- Spam logic
-                    local event = tool:FindFirstChild("GunScript_Server") and tool.GunScript_Server:FindFirstChild("InflictTarget")
+                    -- Spam the remote
+                    local event = rifle:FindFirstChild("GunScript_Server") and rifle.GunScript_Server:FindFirstChild("InflictTarget")
                     if event then
                         event:FireServer(
                             "Torso",
                             hum,
                             torso,
-                            tool,
+                            rifle,
                             Vector3.new(0.41955700516701, -0.16235166788101, 0.89309215545654)
                         )
                     end
-                    task.wait(0.1) -- 0.1s delay for spam
+                    task.wait(0.1)
+                    
+                -- FULL HEALTH MODE
                 elseif hum.Health >= 100 then
-                    -- Unequip if full health
-                    hum:UnequipTools()
+                    -- Only unequip the rifle if it is currently equipped
+                    if rifle.Parent == char then
+                        rifle.Parent = player.Backpack
+                    end
                 end
             end
         end
