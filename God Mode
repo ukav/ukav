@@ -1,10 +1,4 @@
---[[
-GOD MODE
-
-Gui to C++
-Version: v1.3
-]]
-
+-- GOD MODE GUI
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
 local TextLabel = Instance.new("TextLabel")
@@ -57,21 +51,14 @@ TextButton.Text = "OFF"
 TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
 TextButton.TextSize = 15.000
 
-local function Godmode_Script_v2() -- TextButton.LocalScript 
-    local script = Instance.new('LocalScript', TextButton)
-
+-- Logic
+local function Godmode_Script_v2()
     local player = game:GetService("Players").LocalPlayer
     local nega = true
     local trackedParts = {}
     
-    local toggleButton = script.Parent
-    
     local function updateButtonText()
-        if nega then
-            toggleButton.Text = "OFF"
-        else
-            toggleButton.Text = "ON"
-        end
+        TextButton.Text = nega and "OFF" or "ON"
     end
     
     local function restoreCollisions()
@@ -91,39 +78,39 @@ local function Godmode_Script_v2() -- TextButton.LocalScript
         updateButtonText()
     end
     
-    local function applyToggleEffect()
-        while task.wait() do
-            local character = player.Character or player.CharacterAdded:Wait()
-            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-            
-            if not nega then
-                local parts = workspace:GetPartBoundsInRadius(humanoidRootPart.Position, 10)
-                for _, part in ipairs(parts) do
-                    if part.CanTouch then
-                        part.CanTouch = false
-                        trackedParts[part] = true
+    -- Single Main Loop
+    task.spawn(function()
+        while true do
+            task.wait(0.1) -- Slightly increased wait for better performance
+            local character = player.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                if not nega then
+                    local hrp = character.HumanoidRootPart
+                    local parts = workspace:GetPartBoundsInRadius(hrp.Position, 10)
+                    for _, part in ipairs(parts) do
+                        if part.CanTouch then
+                            part.CanTouch = false
+                            trackedParts[part] = true
+                        end
                     end
                 end
             end
         end
-    end
+    end)
     
+    -- Cleanup on respawn
     player.CharacterAdded:Connect(function()
         restoreCollisions()
-        applyToggleEffect()
         updateButtonText()
     end)
     
-    toggleButton.MouseButton1Click:Connect(function()
+    TextButton.MouseButton1Click:Connect(function()
         toggleFeature()
     end)
-    
-    applyToggleEffect()
-    updateButtonText()
 end
 
 CloseButton.MouseButton1Click:Connect(function()
     ScreenGui:Destroy()
 end)
 
-coroutine.wrap(Godmode_Script_v2)()
+Godmode_Script_v2()
