@@ -1,45 +1,5 @@
 local ProximityPromptService = game:GetService("ProximityPromptService")
-local UserInputService = game:GetService("UserInputService")
 
-local IsHackEnabled = false
-local OriginalDurations = {}
-
--- Function to handle the prompt logic
 ProximityPromptService.PromptShown:Connect(function(prompt)
-    if not IsHackEnabled then return end
-
-    -- Store the original duration if we haven't seen this prompt yet
-    if not OriginalDurations[prompt] then
-        OriginalDurations[prompt] = prompt.HoldDuration
-    end
-
-    -- Force the duration to 0
     prompt.HoldDuration = 0
-end)
-
--- Toggle function
-local function ToggleHack()
-    IsHackEnabled = not IsHackEnabled
-    
-    if not IsHackEnabled then
-        -- Restore all original durations when turning off
-        for prompt, duration in pairs(OriginalDurations) do
-            if prompt then
-                prompt.HoldDuration = duration
-            end
-        end
-        OriginalDurations = {} -- Clear the table
-        print("Proximity Hack: OFF")
-    else
-        print("Proximity Hack: ON")
-    end
-end
-
--- V Keybind
-UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-    if gameProcessedEvent then return end
-    
-    if input.KeyCode == Enum.KeyCode.V then
-        ToggleHack()
-    end
 end)
