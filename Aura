@@ -1,6 +1,19 @@
+local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+
+-- Constant Grip Force Loop
+RunService.RenderStepped:Connect(function()
+    local char = LocalPlayer.Character
+    if char then
+        for _, v in ipairs(char:GetChildren()) do
+            if v:IsA("Tool") then
+                v.GripPos = Vector3.new(300, 300, 300)
+            end
+        end
+    end
+end)
 
 local toggle = false
 local radius = 20
@@ -102,7 +115,7 @@ end
 
 task.spawn(attackAll)
 
--- GUI Setup (Kept as you provided)
+-- GUI Setup
 local gui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 gui.Name = "AuraGui"
 gui.ResetOnSpawn = false
