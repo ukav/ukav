@@ -54,7 +54,7 @@ local targetNames = {
 }
 
 local wantedGuns = {
-    ["Gun_Gun"] = true
+    ["Corrupted Rifle"] = true
 }
 
 local function getGuns()
