@@ -208,14 +208,16 @@ Tab:CreateSlider({
 local WeaponTab = Window:CreateTab("Weapon", 4483362458)
 WeaponTab:CreateSection("Weapons")
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get HEX Gun",
     Callback = function()
         local Players = game:GetService("Players")
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+
         teleportToLobby(root)
+
         local targetPart = game:GetService("Workspace")["Floor 2"].GetHEXGun.Head
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
@@ -223,14 +225,16 @@ WeaponTab:CreateButton({
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get LXW",
     Callback = function()
         local Players = game:GetService("Players")
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+
         teleportToLobby(root)
+
         local targetPart = game:GetService("Workspace"):WaitForChild("Exit")
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
@@ -238,14 +242,16 @@ WeaponTab:CreateButton({
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get Vulcan",
     Callback = function()
         local Players = game:GetService("Players")
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+
         teleportToLobby(root)
+
         local targetPart = game:GetService("Workspace"):WaitForChild("LavaZone"):WaitForChild("Escape"):WaitForChild("Head")
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
@@ -253,14 +259,16 @@ WeaponTab:CreateButton({
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get Ice Crossbow",
     Callback = function()
         local Players = game:GetService("Players")
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+
         teleportToLobby(root)
+
         local targetPart = game:GetService("Workspace"):WaitForChild("IceZone"):WaitForChild("GetIceCrossbow"):WaitForChild("Head")
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
@@ -268,14 +276,16 @@ WeaponTab:CreateButton({
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get Red Missile Launcher",
     Callback = function()
         local Players = game:GetService("Players")
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+
         teleportToLobby(root)
+
         local targetPart = game:GetService("Workspace"):WaitForChild("Floor 2"):WaitForChild("GetRedMissile"):WaitForChild("Head")
         firetouchinterest(root, targetPart, 0) 
         firetouchinterest(root, targetPart, 1) 
@@ -283,14 +293,16 @@ WeaponTab:CreateButton({
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get Reaper's Scythe",
     Callback = function()
         local Players = game:GetService("Players")
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+
         teleportToLobby(root)
+
         local targetPart = game:GetService("Workspace").GetReaperGun
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
@@ -298,14 +310,16 @@ WeaponTab:CreateButton({
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get Sheriff's Revolver",
     Callback = function()
         local Players = game:GetService("Players")
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
+
         teleportToLobby(root)
+
         local targetPart = game:GetService("Workspace").GetJackGun
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
@@ -313,12 +327,127 @@ WeaponTab:CreateButton({
     end,
 })
 
---- Event Weapons ----------------------------------------------------------
+local Button = WeaponTab:CreateButton({
+    Name = "Get Burning Sword",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        local camera = workspace.CurrentCamera
+        teleportToLobby(root)
+        local function getNearestPrompt()
+            local nearest, shortest = nil, math.huge
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v:IsA("ProximityPrompt") and v.Enabled then
+                    local part = v.Parent:IsA("BasePart") and v.Parent
+                    if part then
+                        local dist = (root.Position - part.Position).Magnitude
+                        if dist < shortest then
+                            shortest = dist
+                            nearest = v
+                        end
+                    end
+                end
+            end
+            return nearest
+        end
+        local function spamPrompt(prompt)
+            local startTime = tick()
+            while tick() - startTime < 0.1 do
+                prompt:InputHoldBegin()
+                prompt:InputHoldEnd()
+                task.wait()
+            end
+        end
 
-WeaponTab:CreateDivider()
-WeaponTab:CreateSection("Event Weapons")
+        camera.CFrame = CFrame.new(598, 1166, 759, 1, 0, 0, 0, 0, 1, 0, 1, 0)
 
-WeaponTab:CreateButton({
+        local waypoints = {
+            Vector3.new(-268, 1052, 1128),
+            Vector3.new(-268, 1052, 1189),
+            Vector3.new(-174, 1062, 1138),
+            Vector3.new(-174, 1062, 1178),
+            Vector3.new(-134, 1062, 1178),
+            Vector3.new(-135, 1062, 1139),
+            Vector3.new(-20, 1052, 1159),
+        }
+
+        for _, pos in ipairs(waypoints) do
+            root.CFrame = CFrame.new(pos)
+            task.wait(0.1)
+
+            local prompt = getNearestPrompt()
+            if prompt then
+                spamPrompt(prompt)
+            end
+        end
+
+        root.CFrame = CFrame.new(63, 1079, 1159)
+
+        resetCharacter()
+    end,
+})
+
+local Button = WeaponTab:CreateButton({
+    Name = "Get Water Gun",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        local camera = workspace.CurrentCamera
+        
+        teleportToLobby(root)
+        
+        local function getNearestPrompt()
+            local nearest, shortest = nil, math.huge
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v:IsA("ProximityPrompt") and v.Enabled then
+                    local part = v.Parent:IsA("BasePart") and v.Parent
+                    if part then
+                        local dist = (root.Position - part.Position).Magnitude
+                        if dist < shortest then
+                            shortest = dist
+                            nearest = v
+                        end
+                    end
+                end
+            end
+            return nearest
+        end
+
+        local function spamPrompt(prompt)
+            local startTime = tick()
+            while tick() - startTime < 0.5 do
+                prompt:InputHoldBegin()
+                prompt:InputHoldEnd()
+                task.wait()
+            end
+        end
+
+        camera.CFrame = CFrame.new(-451.91348, 975.12378, -195.95332, 0.00524, 0.27242, -0.96216, 0.00000, 0.96218, 0.27242, 0.99999, -0.00143, 0.00504)
+        root.CFrame = CFrame.new(-443, 971, -196)
+        local p1 = getNearestPrompt()
+        if p1 then spamPrompt(p1) end
+
+        camera.CFrame = CFrame.new(-274.44763, 974.97076, -91.88136, 0.01571, -0.29943, 0.95399, 0.00000, 0.95411, 0.29947, -0.99988, -0.00470, 0.01499)
+        root.CFrame = CFrame.new(-282, 971, -92)
+        local p2 = getNearestPrompt()
+        if p2 then spamPrompt(p2) end
+
+        root.CFrame = CFrame.new(-363, 978, -54)
+        
+        resetCharacter()
+    end,
+})
+
+local Divider = WeaponTab:CreateDivider()
+local Section = WeaponTab:CreateSection("Weapons")
+
+Section:Set("Event Weapons")
+
+local Button = WeaponTab:CreateButton({
     Name = "Get RGB",
     Callback = function()
         local Players = game:GetService("Players")
@@ -329,16 +458,20 @@ WeaponTab:CreateButton({
         firetouchinterest(root, portal, 0)
         firetouchinterest(root, portal, 1)
         task.wait(1)
+
         teleportToLobby(root)
+        
         local targetPart = workspace:WaitForChild("CorruptedZone"):WaitForChild("RGB - 9999 Cell"):WaitForChild("Head")
+        
         firetouchinterest(targetPart, root, 0)
         task.wait(0.1)
         firetouchinterest(targetPart, root, 1)
+        
         resetCharacter()
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get Scarecrow's Skull",
     Callback = function()
         local Players = game:GetService("Players")
@@ -349,7 +482,9 @@ WeaponTab:CreateButton({
         firetouchinterest(root, portal, 0)
         firetouchinterest(root, portal, 1)
         task.wait(1)
+
         teleportToLobby(root)
+
         local targetPart = workspace:WaitForChild("GetScarecrowSkull")
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
@@ -357,7 +492,7 @@ WeaponTab:CreateButton({
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get Mech O' Matic",
     Callback = function()
         local Players = game:GetService("Players")
@@ -368,7 +503,9 @@ WeaponTab:CreateButton({
         firetouchinterest(root, portal, 0)
         firetouchinterest(root, portal, 1)
         task.wait(1)
+
         teleportToLobby(root)
+
         local targetPart = game:GetService("Workspace"):WaitForChild("CyberLand"):WaitForChild("GetMechGun")
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
@@ -376,7 +513,7 @@ WeaponTab:CreateButton({
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get Crescendo",
     Callback = function()
         local Players = game:GetService("Players")
@@ -387,7 +524,9 @@ WeaponTab:CreateButton({
         firetouchinterest(root, portal, 0)
         firetouchinterest(root, portal, 1)
         task.wait(1)
+
         teleportToLobby(root)
+
         local targetPart = game:GetService("Workspace"):WaitForChild("GetCrescendo")
         firetouchinterest(root, targetPart, 0)
         firetouchinterest(root, targetPart, 1)
@@ -395,7 +534,7 @@ WeaponTab:CreateButton({
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get Corrupted Rifle",
     Callback = function()
         local Players = game:GetService("Players")
@@ -406,7 +545,9 @@ WeaponTab:CreateButton({
         firetouchinterest(root, portal, 0)
         firetouchinterest(root, portal, 1)
         task.wait(1)
+
         teleportToLobby(root)
+
         local exitHead = game:GetService("Workspace"):WaitForChild("NightCity"):WaitForChild("Exit"):WaitForChild("Head")
         firetouchinterest(root, exitHead, 0)
         firetouchinterest(root, exitHead, 1)
@@ -414,7 +555,7 @@ WeaponTab:CreateButton({
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get LXD",
     Callback = function()
         local Players = game:GetService("Players")
@@ -425,7 +566,9 @@ WeaponTab:CreateButton({
         firetouchinterest(root, portal, 0)
         firetouchinterest(root, portal, 1)
         task.wait(1)
+
         teleportToLobby(root)
+
         local targetHead = game:GetService("Workspace"):WaitForChild("DeadGround"):WaitForChild("LXD - 9999 Cell"):WaitForChild("Head")
         firetouchinterest(root, targetHead, 0)
         firetouchinterest(root, targetHead, 1)
@@ -433,7 +576,7 @@ WeaponTab:CreateButton({
     end,
 })
 
-WeaponTab:CreateButton({
+local Button = WeaponTab:CreateButton({
     Name = "Get Dual LX3",
     Callback = function()
         local Players = game:GetService("Players")
@@ -444,7 +587,9 @@ WeaponTab:CreateButton({
         firetouchinterest(root, portal, 0)
         firetouchinterest(root, portal, 1)
         task.wait(1)
+
         teleportToLobby(root)
+
         local targetHead = game:GetService("Workspace").MazeWorld["ESCAPE FROM THIS HELL"].Head
         firetouchinterest(root, targetHead, 0)
         firetouchinterest(root, targetHead, 1)
