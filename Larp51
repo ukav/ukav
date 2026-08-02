@@ -358,6 +358,7 @@ WeaponTab:CreateButton({
             end
         end
         root.CFrame = CFrame.new(63, 1079, 1159)
+        task.wait(1)
         resetCharacter()
     end,
 })
@@ -403,6 +404,7 @@ WeaponTab:CreateButton({
         local p2 = getNearestPrompt()
         if p2 then spamPrompt(p2) end
         root.CFrame = CFrame.new(-363, 978, -54)
+        task.wait(1)
         resetCharacter()
     end,
 })
@@ -433,7 +435,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Scarecrow's Skull",
     Callback = function()
@@ -452,7 +453,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Mech O' Matic",
     Callback = function()
@@ -471,7 +471,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Crescendo",
     Callback = function()
@@ -490,7 +489,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Corrupted Rifle",
     Callback = function()
@@ -509,7 +507,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get LXD",
     Callback = function()
@@ -528,7 +525,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Dual LX3",
     Callback = function()
