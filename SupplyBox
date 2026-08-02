@@ -1,0 +1,39 @@
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local ProximityPromptService = game:GetService("ProximityPromptService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Function to handle the supply box logic
+local function collectSupplyBoxes()
+    local supplyBoxes = {}
+
+    -- Find all SupplyBox objects in Workspace
+    for _, obj in pairs(Workspace:GetChildren()) do
+        if obj.Name == "SupplyBox" and obj:IsA("BasePart") then
+            table.insert(supplyBoxes, obj)
+        end
+    end
+
+    for _, box in pairs(supplyBoxes) do
+        -- Teleport player to the box
+        humanoidRootPart.CFrame = box.CFrame + Vector3.new(0, 3, 0)
+        
+        -- Wait a moment for positioning
+        task.wait(0.5)
+
+        -- Find and trigger ProximityPrompt if it exists inside the box
+        local prompt = box:FindFirstChildOfClass("ProximityPrompt", true)
+        if prompt then
+            fireproximityprompt(prompt)
+        end
+        
+        -- Wait for collection/interaction
+        task.wait(0.5)
+    end
+end
+
+task.wait(2.5)
+collectSupplyBoxes()
