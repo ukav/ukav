@@ -1,0 +1,9 @@
+local Players = game:GetService("Players")
+
+local function rejoin()
+    Players.LocalPlayer:Kick("Rejoining...")
+    wait() -- Delay
+    game:GetService("TeleportService"):Teleport(game.PlaceId, Players.LocalPlayer)
+end
+
+rejoin()
