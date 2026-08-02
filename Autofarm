@@ -1,0 +1,132 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Set to true to run immediately without a toggle button
+local enabled = true
+
+local targetNames = {
+-- Boss
+    ["Jack O' Lantern"] = true,
+    ["Reaper"] = true,
+    ["Zombie Brute"] = true,
+
+-- Mobs
+    ["Dweller"] = true,
+    ["Pale"] = true,
+    ["Lurker"] = true,
+    ["Rakul"] = true,
+    ["Zombie"] = true,
+    ["Sonic.EXE"] = true,
+    ["Prisoner Zombie"] = true,
+    ["Soldier Zombie"] = true,
+    ["Eyeless Jack"] = true,
+    ["Jeff the Killer"] = true,
+    ["Grue"] = true,
+    ["Friend"] = true,
+    ["Hydra"] = true,
+    ["Slenderman"] = true,
+    ["Golem"] = true,
+    ["Rager"] = true,
+    ["Frosted"] = true,
+    ["The Expressionless"] = true,
+    ["Drold"] = true,
+    ["Guardian"] = true,
+    ["Mega Guardian"] = true,
+    ["Blaze"] = true,
+    ["Serpent"] = true,
+    ["Sentry"] = true,
+    ["Cyborg"] = true,
+    ["M.I.C"] = true,
+    ["M.O.C"] = true,
+    ["Flamas"] = true,
+    ["Toxicle"] = true,
+    ["004"] = true,
+    ["Jengu"] = true,
+    ["Coal"] = true,
+    ["Iron"] = true,
+    ["Gold"] = true,
+    ["Diamond"] = true,
+    ["Snowman"] = true,
+    ["Ice Skeleton"] = true,
+    ["Skeleton"] = true,
+    ["Evoker"] = true,
+    ["Mannequin"] = true,
+    ["Terror"] = true,
+}
+
+local wantedGuns = {
+    ["Corrupted Rifle"] = true
+}
+
+local function getGuns()
+    local guns = {}
+    local char = LocalPlayer.Character
+    local backpack = LocalPlayer.Backpack
+
+    local function checkAndAdd(item)
+        if item:IsA("Tool") and wantedGuns[item.Name] and item:FindFirstChild("GunScript_Server") then
+            table.insert(guns, item)
+        end
+    end
+
+    if char then
+        for _, item in pairs(char:GetChildren()) do
+            checkAndAdd(item)
+        end
+    end
+    if backpack then
+        for _, item in pairs(backpack:GetChildren()) do
+            checkAndAdd(item)
+        end
+    end
+
+    return guns
+end
+
+local function isValidNPC(model)
+    if not model:IsA("Model") then return false end
+    if not targetNames[model.Name] then return false end
+    if Players:GetPlayerFromCharacter(model) then return false end
+    local humanoid = model:FindFirstChildOfClass("Humanoid")
+    local torso = model:FindFirstChild("HumanoidRootPart") or model:FindFirstChild("Torso")
+    if not humanoid or not torso then return false end
+    return true
+end
+
+local function attackNPCs()
+    while true do
+        if enabled then
+            local char = LocalPlayer.Character
+            local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+            local hrp = char and char:FindFirstChild("HumanoidRootPart")
+            
+            if char and hrp and humanoid and humanoid.Health > 0 then
+                local guns = getGuns()
+                if #guns > 0 then
+                    for _, npc in ipairs(workspace:GetChildren()) do
+                        if isValidNPC(npc) then
+                            local humanoidNPC = npc:FindFirstChildOfClass("Humanoid")
+                            local torso = npc:FindFirstChild("HumanoidRootPart") or npc:FindFirstChild("Torso")
+                            
+                            if humanoidNPC and torso and humanoidNPC.Health > 0 then
+                                for _, gun in ipairs(guns) do
+                                    local remote = gun.GunScript_Server and gun.GunScript_Server:FindFirstChild("InflictTarget")
+                                    if remote then
+                                        pcall(function()
+                                            if humanoidNPC.Health > 0 then
+                                                remote:FireServer("Head", humanoidNPC, torso, gun, Vector3.new())
+                                            end
+                                        end)
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        task.wait(0.1)
+    end
+end
+
+coroutine.wrap(attackNPCs)()
