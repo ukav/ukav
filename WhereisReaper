@@ -205,7 +205,7 @@ local AkaliNotif = {
 
 -- Scan for the Reaper NPC and notify accordingly
 local function NotifyReaperStatus()
-    local reaper = workspace:FindFirstChild("Jack O' Lantern")
+    local reaper = workspace:FindFirstChild("Reaper")
     local humanoid = reaper and reaper:FindFirstChildOfClass("Humanoid")
 
     if reaper and humanoid and humanoid.Health > 0 then
