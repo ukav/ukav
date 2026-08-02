@@ -155,7 +155,7 @@ Tab:CreateButton({
 --- Gun mod ----------------------------------------------------------
 
 Tab:CreateButton({
-    Name = "Gunmod",
+    Name = "Tool",
     Callback = function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Gunmod"))() end,
 })
 
