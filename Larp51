@@ -60,13 +60,10 @@ Tab:CreateButton({
         local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
         local npc = workspace:FindFirstChild("Reaper")
         local npcRoot = npc and (npc:FindFirstChild("HumanoidRootPart") or npc:FindFirstChild("Torso") or npc:FindFirstChild("UpperTorso"))
-
         if not root or not npcRoot then return end
-
         if not getgenv().ReaperTrack then
             getgenv().ReaperTrack = true
             getgenv().ReaperOldPos = root.CFrame
-
             local part = Instance.new("Part")
             part.Name = "ReaperPlatform"
             part.Size = Vector3.new(10, 1, 10)
@@ -74,17 +71,13 @@ Tab:CreateButton({
             part.Anchored = true
             part.CanCollide = true
             part.Parent = workspace
-            
             task.spawn(function()
-                -- Keep looping as long as we are tracking
                 while getgenv().ReaperTrack do
-                    -- Validate everything still exists
                     if not (npc and npc.Parent and npcRoot and npcRoot.Parent and root and root.Parent) then
-                        getgenv().ReaperTrack = false -- Stop the loop
-                        break -- Exit immediately WITHOUT setting CFrame back
+                        getgenv().ReaperTrack = false
+                        break
                     end
-                    
-                    part.CFrame = npcRoot.CFrame * CFrame.new(0, 10, 0)
+                    part.CFrame = npcRoot.CFrame * CFrame.new(0, 15, 0)
                     root.CFrame = part.CFrame * CFrame.new(0, 3, 0)
                     task.wait()
                 end
@@ -92,14 +85,12 @@ Tab:CreateButton({
             end)
         else
             getgenv().ReaperTrack = false
-            -- Only teleport back if we manually toggled it off while still alive
             if root and root.Parent then
                 root.CFrame = getgenv().ReaperOldPos
             end
         end
     end
 })
-
 Tab:CreateButton({
     Name = "Jack",
     Callback = function()
@@ -107,13 +98,10 @@ Tab:CreateButton({
         local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
         local npc = workspace:FindFirstChild("Jack O' Lantern")
         local npcRoot = npc and (npc:FindFirstChild("HumanoidRootPart") or npc:FindFirstChild("Torso") or npc:FindFirstChild("UpperTorso"))
-
         if not root or not npcRoot then return end
-
         if not getgenv().JackTrack then
             getgenv().JackTrack = true
             getgenv().JackOldPos = root.CFrame
-
             local part = Instance.new("Part")
             part.Name = "JackPlatform"
             part.Size = Vector3.new(10, 1, 10)
@@ -121,16 +109,13 @@ Tab:CreateButton({
             part.Anchored = true
             part.CanCollide = true
             part.Parent = workspace
-            
             task.spawn(function()
                 while getgenv().JackTrack do
-                    -- Validate everything still exists
                     if not (npc and npc.Parent and npcRoot and npcRoot.Parent and root and root.Parent) then
                         getgenv().JackTrack = false
-                        break -- Exit immediately WITHOUT setting CFrame back
+                        break
                     end
-
-                    part.CFrame = npcRoot.CFrame * CFrame.new(0, 10, 0)
+                    part.CFrame = npcRoot.CFrame * CFrame.new(0, 15, 0)
                     root.CFrame = part.CFrame * CFrame.new(0, 3, 0)
                     task.wait()
                 end
@@ -138,7 +123,6 @@ Tab:CreateButton({
             end)
         else
             getgenv().JackTrack = false
-            -- Only teleport back if we manually toggled it off while still alive
             if root and root.Parent then
                 root.CFrame = getgenv().JackOldPos
             end
