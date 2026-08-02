@@ -12,7 +12,9 @@ local Window = Rayfield:CreateWindow({
    KeySystem = false
 })
 
--- Teleport & Reset Logic
+--- Logics ----------------------------------------------------------
+
+-- Bypass & Reset Logic
 local function teleportToLobby(r) local e=workspace:FindFirstChild("Ground") and workspace.Ground:FindFirstChild("Entrance"); while e and e.CanCollide do r.CFrame=CFrame.new(624,1149,750.5); task.wait(2) end end
 local function resetCharacter() game.Players.LocalPlayer.Character:BreakJoints() end
 
@@ -37,7 +39,7 @@ Tab:CreateSection("Larp tools")
 --- Animation ----------------------------------------------------------
 
 Tab:CreateButton({
-    Name = "Reaper's Room",
+    Name = "Reaper",
     Callback = function()
         local player = game:GetService("Players").LocalPlayer
         local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
@@ -77,7 +79,7 @@ Tab:CreateButton({
 })
 
 Tab:CreateButton({
-    Name = "Jack's Room",
+    Name = "Jack",
     Callback = function()
         local player = game:GetService("Players").LocalPlayer
         local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
