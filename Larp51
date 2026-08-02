@@ -14,6 +14,9 @@ local Window = Rayfield:CreateWindow({
 
 --- Logics ----------------------------------------------------------
 
+-- Notif
+local AkaliNotif={Notify=function(P)local f=Instance.new("Frame",game:GetService("CoreGui"):FindFirstChild("AkaliNotif")or Instance.new("ScreenGui",game:GetService("CoreGui"):Clone().Name=="AkaliNotif"and game:GetService("CoreGui"):FindFirstChild("AkaliNotif")or(function()local s=Instance.new("ScreenGui",game:GetService("CoreGui"));s.Name="AkaliNotif";return s end)()));f.Size=UDim2.new(0,200,0,60);f.Position=UDim2.new(1,-210,0,50);f.BackgroundColor3=Color3.fromRGB(30,30,30);f.BorderSizePixel=0;local t=Instance.new("TextLabel",f);t.Text=P.Title;t.Size=UDim2.new(1,0,0.5,0);t.TextColor3=Color3.new(1,1,1);t.BackgroundTransparency=1;local d=Instance.new("TextLabel",f);d.Text=P.Description;d.Size=UDim2.new(1,0,0.5,0);d.Position=UDim2.new(0,0,0.5,0);d.TextColor3=Color3.new(0.8,0.8,0.8);d.BackgroundTransparency=1;task.wait(P.Duration or 5);f:Destroy()end}
+
 -- Bypass & Reset Logic
 local function teleportToLobby(r) local e=workspace:FindFirstChild("Ground") and workspace.Ground:FindFirstChild("Entrance"); while e and e.CanCollide do r.CFrame=CFrame.new(624,1149,750.5); task.wait(2) end end
 local function resetCharacter() game.Players.LocalPlayer.Character:BreakJoints() end
@@ -36,7 +39,19 @@ Tab:CreateSection("Larp tools")
 
 --- Larp tools ----------------------------------------------------------
 
---- Animation ----------------------------------------------------------
+--- Where is? ----------------------------------------------------------
+
+Tab:CreateButton({
+    Name = "Where is Reaper?",
+    Callback = function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/WhereisReaper"))() end,
+})
+
+Tab:CreateButton({
+    Name = "Where is Jack?",
+    Callback = function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/WhereisJack"))() end,
+})
+
+--- Check ----------------------------------------------------------
 
 Tab:CreateButton({
     Name = "Reaper",
