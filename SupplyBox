@@ -11,7 +11,7 @@ local function collectSupplyBoxes()
         if obj.Name == "SupplyBox" and obj:IsA("BasePart") then
             -- Teleport to the box
             humanoidRootPart.CFrame = obj.CFrame + Vector3.new(0, 3, 0)
-            task.wait(0.5)
+            task.wait(0.1)
 
             -- Find and trigger the prompt correctly
             local prompt = obj:FindFirstChildOfClass("ProximityPrompt")
@@ -20,7 +20,7 @@ local function collectSupplyBoxes()
                 fireproximityprompt(prompt) 
             end
             
-            task.wait(0.5)
+            task.wait(0.1)
         end
     end
 end
