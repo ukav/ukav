@@ -66,20 +66,24 @@ Tab:CreateButton({
             getgenv().ReaperTrack = true
             getgenv().ReaperOldPos = root.CFrame
 
-            -- Create the 10x1x10 platform
             local part = Instance.new("Part")
             part.Name = "ReaperPlatform"
             part.Size = Vector3.new(10, 1, 10)
             part.Transparency = 1
             part.Anchored = true
-            part.CanCollide = true -- Allow walking on it
+            part.CanCollide = true
             part.Parent = workspace
             
             task.spawn(function()
-                while getgenv().ReaperTrack and npcRoot.Parent and root and root.Parent do
-                    -- Keep platform at NPC position + 10 studs up
+                -- Keep looping as long as we are tracking
+                while getgenv().ReaperTrack do
+                    -- Validate everything still exists
+                    if not (npc and npc.Parent and npcRoot and npcRoot.Parent and root and root.Parent) then
+                        getgenv().ReaperTrack = false -- Stop the loop
+                        break -- Exit immediately WITHOUT setting CFrame back
+                    end
+                    
                     part.CFrame = npcRoot.CFrame * CFrame.new(0, 10, 0)
-                    -- Keep player on the platform center
                     root.CFrame = part.CFrame * CFrame.new(0, 3, 0)
                     task.wait()
                 end
@@ -87,7 +91,10 @@ Tab:CreateButton({
             end)
         else
             getgenv().ReaperTrack = false
-            root.CFrame = getgenv().ReaperOldPos
+            -- Only teleport back if we manually toggled it off while still alive
+            if root and root.Parent then
+                root.CFrame = getgenv().ReaperOldPos
+            end
         end
     end
 })
@@ -106,7 +113,6 @@ Tab:CreateButton({
             getgenv().JackTrack = true
             getgenv().JackOldPos = root.CFrame
 
-            -- Create the 10x1x10 platform
             local part = Instance.new("Part")
             part.Name = "JackPlatform"
             part.Size = Vector3.new(10, 1, 10)
@@ -116,10 +122,14 @@ Tab:CreateButton({
             part.Parent = workspace
             
             task.spawn(function()
-                while getgenv().JackTrack and npcRoot.Parent and root and root.Parent do
-                    -- Keep platform at NPC position + 10 studs up
+                while getgenv().JackTrack do
+                    -- Validate everything still exists
+                    if not (npc and npc.Parent and npcRoot and npcRoot.Parent and root and root.Parent) then
+                        getgenv().JackTrack = false
+                        break -- Exit immediately WITHOUT setting CFrame back
+                    end
+
                     part.CFrame = npcRoot.CFrame * CFrame.new(0, 10, 0)
-                    -- Keep player on the platform center
                     root.CFrame = part.CFrame * CFrame.new(0, 3, 0)
                     task.wait()
                 end
@@ -127,7 +137,10 @@ Tab:CreateButton({
             end)
         else
             getgenv().JackTrack = false
-            root.CFrame = getgenv().JackOldPos
+            -- Only teleport back if we manually toggled it off while still alive
+            if root and root.Parent then
+                root.CFrame = getgenv().JackOldPos
+            end
         end
     end
 })
