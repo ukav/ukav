@@ -2,27 +2,33 @@ local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 
 local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local duration = 60 -- Duration in seconds
+local endTime = os.clock() + duration
 
-local function collectSupplyBoxes()
-    -- Use GetDescendants to find objects inside folders/models
-    for _, obj in pairs(Workspace:GetDescendants()) do
-        if obj.Name == "SupplyBox" and obj:IsA("BasePart") then
-            -- Teleport to the box
-            humanoidRootPart.CFrame = obj.CFrame + Vector3.new(0, 3, 0)
-            task.wait(0.1)
+while os.clock() < endTime do
+    local character = player.Character
+    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
 
-            -- Find and trigger the prompt correctly
-            local prompt = obj:FindFirstChildOfClass("ProximityPrompt")
-            if prompt then
-                -- Standard way to trigger a prompt via script
-                fireproximityprompt(prompt) 
+    if humanoidRootPart then
+        for _, obj in pairs(Workspace:GetDescendants()) do
+            if obj.Name == "SupplyBox" and obj:IsA("BasePart") then
+                -- Teleport to the box
+                humanoidRootPart.CFrame = obj.CFrame + Vector3.new(0, 3, 0)
+                task.wait(0.1)
+
+                -- Trigger the prompt
+                local prompt = obj:FindFirstChildOfClass("ProximityPrompt")
+                if prompt then
+                    fireproximityprompt(prompt)
+                end
+                
+                task.wait(0.2)
+                
+                -- Check time again after interaction
+                if os.clock() >= endTime then break end
             end
-            
-            task.wait(0.1)
         end
     end
+    
+    task.wait(0.5) -- Small delay between full world scans to prevent lag
 end
-
-collectSupplyBoxes()
