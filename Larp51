@@ -362,5 +362,11 @@ TeleportTab:CreateButton({Name="Return to Base", Callback=function() local r=gam
 TeleportTab:CreateButton({Name="Go to Crafting Room", Callback=function() local r=game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart"); firetouchinterest(r,workspace.Ground.GoCraft,0); firetouchinterest(r,workspace.Ground.GoCraft,1) end})
 TeleportTab:CreateButton({Name="Go to Mineshaft", Callback=function() local r=game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart"); firetouchinterest(r,workspace.Ground.GoMine,0); firetouchinterest(r,workspace.Ground.GoMine,1) end})
 TeleportTab:CreateButton({Name="Portal Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-106, 982, 850) end})
+TeleportTab:CreateButton({Name="Burning Sword Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-316, 1062, 1159) end})
+TeleportTab:CreateButton({Name="Water Gun Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-363, 971, -227) end})
+TeleportTab:CreateButton({Name="Jack's Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-514, 881, -278) end})
+TeleportTab:CreateButton({Name="Sewer", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-521, 916, -56) end})
+TeleportTab:CreateButton({Name="Reaper's Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-188, 982, 276) end})
+TeleportTab:CreateButton({Name="Button", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA) end})
 
 Rayfield:LoadConfiguration()
