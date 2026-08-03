@@ -186,11 +186,15 @@ Tab:CreateToggle({
 
 --- Instant Prompt ----------------------------------------------------------
 
+local originalDurations = {}
+
 Tab:CreateToggle({
     Name = "Instant Prompt",
     CurrentValue = false,
     Flag = "InstantPrompt",
-    Callback = function(Value) instantInteractEnabled = Value end,
+    Callback = function(Value)
+        if Value then for _, p in pairs(workspace:GetDescendants()) do if p:IsA("ProximityPrompt") then originalDurations[p] = p.HoldDuration; p.HoldDuration = 0 end end else for p, d in pairs(originalDurations) do if p and p.Parent then p.HoldDuration = d end end; table.clear(originalDurations) end
+    end,
 })
 
 --- Heal ----------------------------------------------------------
