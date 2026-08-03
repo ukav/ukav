@@ -28,7 +28,7 @@ local toggle, radius, wantedGuns, zones = false, 20, { ["Inglaciator"] = true },
 local healToggle = false; game:GetService("RunService").RenderStepped:Connect(function() if not healToggle then return end local char = player.Character if char then for _, v in ipairs(char:GetChildren()) do if v:IsA("Tool") and v.Name == "Cleansed Rifle" then v.GripPos = Vector3.new(50, 50, 50) end end end end); task.spawn(function() while true do if healToggle then local char, rifle = player.Character, player.Backpack:FindFirstChild("Cleansed Rifle") or (player.Character and player.Character:FindFirstChild("Cleansed Rifle")) if char and char:FindFirstChildOfClass("Humanoid") and rifle then if rifle.Parent ~= char then rifle.Parent = char end local event = rifle:FindFirstChild("GunScript_Server") and rifle.GunScript_Server:FindFirstChild("InflictTarget") if event then event:FireServer("Torso", char:FindFirstChildOfClass("Humanoid"), char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso"), rifle, Vector3.new(0.41955700516701, -0.16235166788101, 0.89309215545654)) end end end task.wait(0.1) end end)
 
 -- Instant Prompt
-local instantPrompt = false; game:GetService("ProximityPromptService").PromptShown:Connect(function(prompt) if instantPrompt then prompt.HoldDuration = 0 end end)
+local ProximityPromptService = game:GetService("ProximityPromptService"); local originalDurations = {}; _G.PromptHackEnabled = false; ProximityPromptService.PromptShown:Connect(function(p) if _G.PromptHackEnabled then task.spawn(function() if not originalDurations[p] then originalDurations[p] = p.HoldDuration end; p.HoldDuration = 0 end) end end)
 
 -- God Mode Single Line
 local godModeEnabled, trackedParts = false, {}; local function restoreCollisions() for part, _ in pairs(trackedParts) do if part and part.Parent then part.CanTouch = true end end; trackedParts = {} end; task.spawn(function() while true do task.wait(0.1); if godModeEnabled then local character = game.Players.LocalPlayer.Character; if character and character:FindFirstChild("HumanoidRootPart") then local hrp = character.HumanoidRootPart; local parts = workspace:GetPartBoundsInRadius(hrp.Position, 10); for _, part in ipairs(parts) do if part.CanTouch then part.CanTouch = false; trackedParts[part] = true end end end else restoreCollisions() end end end); game.Players.LocalPlayer.CharacterAdded:Connect(restoreCollisions)
@@ -190,7 +190,9 @@ Tab:CreateToggle({
     Name = "Instant Prompt",
     CurrentValue = false,
     Flag = "InstantPrompt",
-    Callback = function(Value) instantPrompt = Value end,
+    Callback = function(Value)
+        _G.PromptHackEnabled = Value; if not Value then task.spawn(function() for p, d in pairs(originalDurations) do if p and p.Parent then p.HoldDuration = d end end; table.clear(originalDurations) end) end
+    end,
 })
 
 --- Heal ----------------------------------------------------------
