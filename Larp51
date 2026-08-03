@@ -297,34 +297,6 @@ WeaponTab:CreateButton({
     end,
 })
 WeaponTab:CreateButton({
-    Name = "Get Reaper's Scythe",
-    Callback = function()
-        local Players = game:GetService("Players")
-        local LocalPlayer = Players.LocalPlayer
-        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-        local root = char:WaitForChild("HumanoidRootPart")
-        teleportToLobby(root)
-        local targetPart = game:GetService("Workspace").GetReaperGun
-        root.CFrame = targetPart.CFrame
-        task.wait(0.1)
-        resetCharacter()
-    end,
-})
-WeaponTab:CreateButton({
-    Name = "Get Sheriff's Revolver",
-    Callback = function()
-        local Players = game:GetService("Players")
-        local LocalPlayer = Players.LocalPlayer
-        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-        local root = char:WaitForChild("HumanoidRootPart")
-        teleportToLobby(root)
-        local targetPart = game:GetService("Workspace").GetJackGun
-        root.CFrame = targetPart.CFrame
-        task.wait(0.1)
-        resetCharacter()
-    end,
-})
-WeaponTab:CreateButton({
     Name = "Get Burning Sword",
     Callback = function()
         local Players = game:GetService("Players")
@@ -423,6 +395,34 @@ WeaponTab:CreateButton({
         if p2 then spamPrompt(p2) end
         root.CFrame = CFrame.new(-363, 978, -54)
         task.wait(1)
+        resetCharacter()
+    end,
+})
+WeaponTab:CreateButton({
+    Name = "Get Reaper's Scythe",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local targetPart = game:GetService("Workspace").GetReaperGun
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
+        resetCharacter()
+    end,
+})
+WeaponTab:CreateButton({
+    Name = "Get Sheriff's Revolver",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local targetPart = game:GetService("Workspace").GetJackGun
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
         resetCharacter()
     end,
 })
