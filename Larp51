@@ -551,7 +551,7 @@ WeaponTab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
         teleportToLobby(root)
-        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        local portal = game:GetService("Workspace"):WaitForChild("DarkPortal"):WaitForChild("Beam") 
         firetouchinterest(root, portal, 0)
         firetouchinterest(root, portal, 1)
         task.wait(1)
