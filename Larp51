@@ -214,8 +214,8 @@ WeaponTab:CreateButton({
         local root = char:WaitForChild("HumanoidRootPart")
         teleportToLobby(root)
         local targetPart = game:GetService("Workspace")["Floor 2"].GetHEXGun.Head
-        firetouchinterest(root, targetPart, 0)
-        firetouchinterest(root, targetPart, 1)
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
         resetCharacter()
     end,
 })
@@ -228,8 +228,8 @@ WeaponTab:CreateButton({
         local root = char:WaitForChild("HumanoidRootPart")
         teleportToLobby(root)
         local targetPart = game:GetService("Workspace"):WaitForChild("Exit")
-        firetouchinterest(root, targetPart, 0)
-        firetouchinterest(root, targetPart, 1)
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
         resetCharacter()
     end,
 })
@@ -242,8 +242,8 @@ WeaponTab:CreateButton({
         local root = char:WaitForChild("HumanoidRootPart")
         teleportToLobby(root)
         local targetPart = game:GetService("Workspace"):WaitForChild("LavaZone"):WaitForChild("Escape"):WaitForChild("Head")
-        firetouchinterest(root, targetPart, 0)
-        firetouchinterest(root, targetPart, 1)
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
         resetCharacter()
     end,
 })
@@ -256,8 +256,8 @@ WeaponTab:CreateButton({
         local root = char:WaitForChild("HumanoidRootPart")
         teleportToLobby(root)
         local targetPart = game:GetService("Workspace"):WaitForChild("IceZone"):WaitForChild("GetIceCrossbow"):WaitForChild("Head")
-        firetouchinterest(root, targetPart, 0)
-        firetouchinterest(root, targetPart, 1)
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
         resetCharacter()
     end,
 })
@@ -270,8 +270,8 @@ WeaponTab:CreateButton({
         local root = char:WaitForChild("HumanoidRootPart")
         teleportToLobby(root)
         local targetPart = game:GetService("Workspace"):WaitForChild("Floor 2"):WaitForChild("GetRedMissile"):WaitForChild("Head")
-        firetouchinterest(root, targetPart, 0) 
-        firetouchinterest(root, targetPart, 1) 
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
         resetCharacter()
     end,
 })
@@ -284,8 +284,8 @@ WeaponTab:CreateButton({
         local root = char:WaitForChild("HumanoidRootPart")
         teleportToLobby(root)
         local targetPart = game:GetService("Workspace").GetReaperGun
-        firetouchinterest(root, targetPart, 0)
-        firetouchinterest(root, targetPart, 1)
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
         resetCharacter()
     end,
 })
@@ -298,8 +298,8 @@ WeaponTab:CreateButton({
         local root = char:WaitForChild("HumanoidRootPart")
         teleportToLobby(root)
         local targetPart = game:GetService("Workspace").GetJackGun
-        firetouchinterest(root, targetPart, 0)
-        firetouchinterest(root, targetPart, 1)
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
         resetCharacter()
     end,
 })
