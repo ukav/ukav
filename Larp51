@@ -749,7 +749,7 @@ Tab:CreateToggle({
 if not getgenv().InstantPromptConn then
     getgenv().InstantPromptConn = game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(prompt)
         if getgenv().InstantPromptEnabled then
-            task.wait(0.1)
+            task.wait(0.05)
             fireproximityprompt(prompt)
         end
     end)
