@@ -8,7 +8,7 @@ local Window = Rayfield:CreateWindow({
    LoadingSubtitle = "by Me",
    ShowText = "Rayfield", 
    ToggleUIKeybind = "G", 
-   ConfigurationSaving = { Enabled = true, FileName = "Big Hub" },
+   ConfigurationSaving = { Enabled = false, FileName = "Larper in Area 51" },
    KeySystem = false
 })
 
@@ -27,9 +27,6 @@ local toggle, radius, wantedGuns, zones = false, 20, { ["Inglaciator"] = true },
 -- Auto Heal
 local healToggle = false; game:GetService("RunService").RenderStepped:Connect(function() if not healToggle then return end local char = player.Character if char then for _, v in ipairs(char:GetChildren()) do if v:IsA("Tool") and v.Name == "Cleansed Rifle" then v.GripPos = Vector3.new(50, 50, 50) end end end end); task.spawn(function() while true do if healToggle then local char, rifle = player.Character, player.Backpack:FindFirstChild("Cleansed Rifle") or (player.Character and player.Character:FindFirstChild("Cleansed Rifle")) if char and char:FindFirstChildOfClass("Humanoid") and rifle then if rifle.Parent ~= char then rifle.Parent = char end local event = rifle:FindFirstChild("GunScript_Server") and rifle.GunScript_Server:FindFirstChild("InflictTarget") if event then event:FireServer("Torso", char:FindFirstChildOfClass("Humanoid"), char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso"), rifle, Vector3.new(0.41955700516701, -0.16235166788101, 0.89309215545654)) end end end task.wait(0.1) end end)
 
--- Instant Prompt
-local instantPrompt = false; game:GetService("ProximityPromptService").PromptShown:Connect(function(prompt) if instantPrompt then prompt.HoldDuration = 0 end end)
-
 -- God Mode Single Line
 local godModeEnabled, trackedParts = false, {}; local function restoreCollisions() for part, _ in pairs(trackedParts) do if part and part.Parent then part.CanTouch = true end end; trackedParts = {} end; task.spawn(function() while true do task.wait(0.1); if godModeEnabled then local character = game.Players.LocalPlayer.Character; if character and character:FindFirstChild("HumanoidRootPart") then local hrp = character.HumanoidRootPart; local parts = workspace:GetPartBoundsInRadius(hrp.Position, 10); for _, part in ipairs(parts) do if part.CanTouch then part.CanTouch = false; trackedParts[part] = true end end end else restoreCollisions() end end end); game.Players.LocalPlayer.CharacterAdded:Connect(restoreCollisions)
 
@@ -39,21 +36,403 @@ Tab:CreateSection("Larp tools")
 
 --- Larp tools ----------------------------------------------------------
 
---- Where is? ----------------------------------------------------------
+--- Check ----------------------------------------------------------
 
 Tab:CreateButton({
     Name = "Where is Reaper?",
-    Callback = function() local TweenService,RunService,TextService,Player=game:GetService("TweenService"),game:GetService("RunService"),game:GetService("TextService"),game:GetService("Players").LocalPlayer;local NotifGui=Instance.new("ScreenGui");NotifGui.Name="AkaliNotif";NotifGui.Parent=RunService:IsStudio() and Player.PlayerGui or game:GetService("CoreGui");local PositionsConfig={TopLeft={Anchor=Vector2.new(0,0),Pos=UDim2.new(0,20,0,20),Reverse=false,SlideX=-1},TopRight={Anchor=Vector2.new(1,0),Pos=UDim2.new(1,-20,0,20),Reverse=false,SlideX=1},DownLeft={Anchor=Vector2.new(0,1),Pos=UDim2.new(0,20,1,-20),Reverse=true,SlideX=-1},DownRight={Anchor=Vector2.new(1,1),Pos=UDim2.new(1,-20,1,-20),Reverse=true,SlideX=1},CenterLeft={Anchor=Vector2.new(0,0.5),Pos=UDim2.new(0,20,0.5,0),Reverse=false,SlideX=-1},CenterRight={Anchor=Vector2.new(1,0.5),Pos=UDim2.new(1,-20,0.5,0),Reverse=false,SlideX=1},CenterTop={Anchor=Vector2.new(0.5,0),Pos=UDim2.new(0.5,0,0,20),Reverse=false,SlideX=1},CenterDown={Anchor=Vector2.new(0.5,1),Pos=UDim2.new(0.5,0,1,-20),Reverse=true,SlideX=1}};local Containers={};for posName,cfg in pairs(PositionsConfig) do local Container=Instance.new("Frame");Container.Name="Container_"..posName;Container.BackgroundTransparency=1;Container.AnchorPoint=cfg.Anchor;Container.Position=cfg.Pos;Container.Size=UDim2.new(0,300,1,-80);Container.Parent=NotifGui;Containers[posName]={Frame=Container,InstructionObjects={},CachedObjects={},LastTick=tick(),Reverse=cfg.Reverse,SlideX=cfg.SlideX} end;local Padding,DescriptionPadding=10,10;local TweenTime,TweenStyle,TweenDirection=1,Enum.EasingStyle.Sine,Enum.EasingDirection.Out;local TitleSettings,DescriptionSettings={Font=Enum.Font.GothamSemibold,Size=14},{Font=Enum.Font.Gotham,Size=14};local MaxWidth=300-Padding-DescriptionPadding;local function Image(ID,Button) local NewImage=Instance.new(string.format("Image%s",Button and "Button" or "Label"));NewImage.Image,NewImage.BackgroundTransparency=ID,1;return NewImage end;local function Round2px() local NewImage=Image("http://www.roblox.com/asset/?id=5761488251");NewImage.ScaleType=Enum.ScaleType.Slice;NewImage.SliceCenter=Rect.new(2,2,298,298);NewImage.ImageColor3=Color3.fromRGB(30,30,30);return NewImage end;local function Shadow2px() local NewImage=Image("http://www.roblox.com/asset/?id=5761498316");NewImage.ScaleType=Enum.ScaleType.Slice;NewImage.SliceCenter=Rect.new(17,17,283,283);NewImage.Size=UDim2.fromScale(1,1)+UDim2.fromOffset(30,30);NewImage.Position=-UDim2.fromOffset(15,15);NewImage.ImageColor3=Color3.fromRGB(30,30,30);return NewImage end;local function CalculateBounds(TableOfObjects) local X,Y=0,0;for _,Object in next,TableOfObjects or {} do X+=Object.AbsoluteSize.X;Y+=Object.AbsoluteSize.Y end;return{X=X,Y=Y} end;local function Label(Text,Font,Size,Button) local Label=Instance.new(string.format("Text%s",Button and "Button" or "Label"));Label.Text,Label.Font,Label.TextSize,Label.BackgroundTransparency,Label.TextXAlignment,Label.RichText,Label.TextColor3=Text,Font,Size,1,Enum.TextXAlignment.Left,true,Color3.fromRGB(255,255,255);return Label end;local PropertyTweenOut={Text="TextTransparency",Fram="BackgroundTransparency",Imag="ImageTransparency"};local function FadeProperty(Object) local Prop=PropertyTweenOut[string.sub(Object.ClassName,1,4)];if Prop then TweenService:Create(Object,TweenInfo.new(0.25,TweenStyle,TweenDirection),{[Prop]=1}):Play() end end;local function FindIndexByDependency(Table,Dependency) for Index,Object in next,Table do if typeof(Object)=="table" then for _,v in next,Object do if v==Dependency then return Index end end elseif Object==Dependency then return Index end end end;local function ResetObjects(objs) for _,Object in next,objs do Object[2],Object[3]=0,false end end;local function FadeOutAfter(Object,Seconds,InstructionObjects) task.wait(Seconds);FadeProperty(Object);for _,SubObj in next,Object:GetDescendants() do FadeProperty(SubObj) end;task.wait(0.25);local idx=FindIndexByDependency(InstructionObjects,Object);if idx then table.remove(InstructionObjects,idx) end;ResetObjects(InstructionObjects) end;local function UpdateContainer(data) local DeltaTime=tick()-data.LastTick;data.LastTick=tick();local objs,Reverse,PreviousObjects=data.InstructionObjects,data.Reverse,{};for i,Object in ipairs(objs) do local Label,Delta,Done=Object[1],Object[2],Object[3];if not Done then if Delta<TweenTime then Object[2]=math.clamp(Delta+DeltaTime,0,1);Delta=Object[2] else Object[3]=true end end;local NewValue=TweenService:GetValue(Delta,TweenStyle,TweenDirection);local TargetPos;if not Reverse then TargetPos=UDim2.new(0,0,0,CalculateBounds(PreviousObjects).Y+(Padding*#PreviousObjects)) else local totalHeight=0;for j=#objs,1,-1 do local lbl=objs[j][1];totalHeight+=lbl.AbsoluteSize.Y+Padding;if objs[j]==Object then TargetPos=UDim2.new(0,0,1,-totalHeight+Padding);break end end end;Label.Position=Label.Position:Lerp(TargetPos,NewValue);table.insert(PreviousObjects,Label) end;data.CachedObjects=PreviousObjects end;RunService:BindToRenderStep("UpdateNotifications",0,function() for _,data in pairs(Containers) do UpdateContainer(data) end end);local AkaliNotif={Notify=function(Properties) local Title,Description,Duration,Position=Properties.Title,Properties.Description,Properties.Duration or 5,Properties.Position or "TopRight";local containerData=Containers[Position] or Containers.TopRight;if Title or Description then local Y=Title and 26 or 0;if Description then local TextSize=TextService:GetTextSize(Description,DescriptionSettings.Size,DescriptionSettings.Font,Vector2.new(0,0));Y+=math.ceil(TextSize.X/MaxWidth)*TextSize.Y+8 end;local NewLabel=Round2px();NewLabel.Size=UDim2.new(1,0,0,Y);local slideX=containerData.SlideX;local initialX,initialOffsetX=slideX,(slideX==-1 and -20 or 20);if containerData.Reverse then NewLabel.Position=UDim2.new(initialX,initialOffsetX,1,20) else NewLabel.Position=UDim2.new(initialX,initialOffsetX,0,CalculateBounds(containerData.CachedObjects).Y+(Padding*#containerData.InstructionObjects)) end;if Title then local NewTitle=Label(Title,TitleSettings.Font,TitleSettings.Size);NewTitle.Size,NewTitle.Position,NewTitle.Parent=UDim2.new(1,-10,0,26),UDim2.fromOffset(10,0),NewLabel end;if Description then local NewDescription=Label(Description,DescriptionSettings.Font,DescriptionSettings.Size);NewDescription.TextWrapped,NewDescription.Size,NewDescription.Position,NewDescription.TextYAlignment,NewDescription.Parent=true,UDim2.fromScale(1,1)+UDim2.fromOffset(-DescriptionPadding,Title and -26 or 0),UDim2.fromOffset(10,Title and 26 or 0),Enum.TextYAlignment[Title and "Top" or "Center"],NewLabel end;Shadow2px().Parent=NewLabel;NewLabel.Parent=containerData.Frame;table.insert(containerData.InstructionObjects,{NewLabel,0,false});coroutine.wrap(FadeOutAfter)(NewLabel,Duration,containerData.InstructionObjects) end end};local function NotifyReaperStatus() local reaper=workspace:FindFirstChild("Reaper");local humanoid=reaper and reaper:FindFirstChildOfClass("Humanoid");if reaper and humanoid and humanoid.Health>0 then AkaliNotif.Notify({Title="Reaper",Description=string.format("%d / %d",math.floor(humanoid.Health),humanoid.MaxHealth),Duration=5,Position="TopRight"}) else AkaliNotif.Notify({Title="Reaper",Description="Dead",Duration=5,Position="TopRight"}) end end;NotifyReaperStatus()
+    Callback = function()
+        local TweenService, RunService, TextService, Player = game:GetService("TweenService"), game:GetService("RunService"), game:GetService("TextService"), game:GetService("Players").LocalPlayer
+        local NotifGui = Instance.new("ScreenGui")
+        NotifGui.Name = "AkaliNotif"
+        NotifGui.Parent = RunService:IsStudio() and Player.PlayerGui or game:GetService("CoreGui")
+        local PositionsConfig = {
+            TopLeft = {Anchor = Vector2.new(0,0), Pos = UDim2.new(0,20,0,20), Reverse = false, SlideX = -1},
+            TopRight = {Anchor = Vector2.new(1,0), Pos = UDim2.new(1,-20,0,20), Reverse = false, SlideX = 1},
+            DownLeft = {Anchor = Vector2.new(0,1), Pos = UDim2.new(0,20,1,-20), Reverse = true, SlideX = -1},
+            DownRight = {Anchor = Vector2.new(1,1), Pos = UDim2.new(1,-20,1,-20), Reverse = true, SlideX = 1},
+            CenterLeft = {Anchor = Vector2.new(0,0.5), Pos = UDim2.new(0,20,0.5,0), Reverse = false, SlideX = -1},
+            CenterRight = {Anchor = Vector2.new(1,0.5), Pos = UDim2.new(1,-20,0.5,0), Reverse = false, SlideX = 1},
+            CenterTop = {Anchor = Vector2.new(0.5,0), Pos = UDim2.new(0.5,0,0,20), Reverse = false, SlideX = 1},
+            CenterDown = {Anchor = Vector2.new(0.5,1), Pos = UDim2.new(0.5,0,1,-20), Reverse = true, SlideX = 1}
+        }
+        local Containers = {}
+        for posName, cfg in pairs(PositionsConfig) do
+            local Container = Instance.new("Frame")
+            Container.Name = "Container_" .. posName
+            Container.BackgroundTransparency = 1
+            Container.AnchorPoint = cfg.Anchor
+            Container.Position = cfg.Pos
+            Container.Size = UDim2.new(0, 300, 1, -80)
+            Container.Parent = NotifGui
+            Containers[posName] = {
+                Frame = Container,
+                InstructionObjects = {},
+                CachedObjects = {},
+                LastTick = tick(),
+                Reverse = cfg.Reverse,
+                SlideX = cfg.SlideX
+            }
+        end
+        local Padding, DescriptionPadding = 10, 10
+        local TweenTime, TweenStyle, TweenDirection = 1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out
+        local TitleSettings, DescriptionSettings = {Font = Enum.Font.GothamSemibold, Size = 14}, {Font = Enum.Font.Gotham, Size = 14}
+        local MaxWidth = 300 - Padding - DescriptionPadding
+        local function Image(ID, Button)
+            local NewImage = Instance.new(string.format("Image%s", Button and "Button" or "Label"))
+            NewImage.Image, NewImage.BackgroundTransparency = ID, 1
+            return NewImage
+        end
+        local function Round2px()
+            local NewImage = Image("http://www.roblox.com/asset/?id=5761488251")
+            NewImage.ScaleType = Enum.ScaleType.Slice
+            NewImage.SliceCenter = Rect.new(2, 2, 298, 298)
+            NewImage.ImageColor3 = Color3.fromRGB(30, 30, 30)
+            return NewImage
+        end
+        local function Shadow2px()
+            local NewImage = Image("http://www.roblox.com/asset/?id=5761498316")
+            NewImage.ScaleType = Enum.ScaleType.Slice
+            NewImage.SliceCenter = Rect.new(17, 17, 283, 283)
+            NewImage.Size = UDim2.fromScale(1, 1) + UDim2.fromOffset(30, 30)
+            NewImage.Position = -UDim2.fromOffset(15, 15)
+            NewImage.ImageColor3 = Color3.fromRGB(30, 30, 30)
+            return NewImage
+        end
+        local function CalculateBounds(TableOfObjects)
+            local X, Y = 0, 0
+            for _, Object in next, TableOfObjects or {} do
+                X += Object.AbsoluteSize.X
+                Y += Object.AbsoluteSize.Y
+            end
+            return {X = X, Y = Y}
+        end
+        local function Label(Text, Font, Size, Button)
+            local Label = Instance.new(string.format("Text%s", Button and "Button" or "Label"))
+            Label.Text, Label.Font, Label.TextSize, Label.BackgroundTransparency, Label.TextXAlignment, Label.RichText, Label.TextColor3 = Text, Font, Size, 1, Enum.TextXAlignment.Left, true, Color3.fromRGB(255, 255, 255)
+            return Label
+        end
+        local PropertyTweenOut = {Text = "TextTransparency", Fram = "BackgroundTransparency", Imag = "ImageTransparency"}
+        local function FadeProperty(Object)
+            local Prop = PropertyTweenOut[string.sub(Object.ClassName, 1, 4)]
+            if Prop then
+                TweenService:Create(Object, TweenInfo.new(0.25, TweenStyle, TweenDirection), {[Prop] = 1}):Play()
+            end
+        end
+        local function FindIndexByDependency(Table, Dependency)
+            for Index, Object in next, Table do
+                if typeof(Object) == "table" then
+                    for _, v in next, Object do
+                        if v == Dependency then
+                            return Index
+                        end
+                    end
+                elseif Object == Dependency then
+                    return Index
+                end
+            end
+        end
+        local function ResetObjects(objs)
+            for _, Object in next, objs do
+                Object[2], Object[3] = 0, false
+            end
+        end
+        local function FadeOutAfter(Object, Seconds, InstructionObjects)
+            task.wait(Seconds)
+            FadeProperty(Object)
+            for _, SubObj in next, Object:GetDescendants() do
+                FadeProperty(SubObj)
+            end
+            task.wait(0.25)
+            local idx = FindIndexByDependency(InstructionObjects, Object)
+            if idx then
+                table.remove(InstructionObjects, idx)
+            end
+            ResetObjects(InstructionObjects)
+        end
+        local function UpdateContainer(data)
+            local DeltaTime = tick() - data.LastTick
+            data.LastTick = tick()
+            local objs, Reverse, PreviousObjects = data.InstructionObjects, data.Reverse, {}
+            for i, Object in ipairs(objs) do
+                local Label, Delta, Done = Object[1], Object[2], Object[3]
+                if not Done then
+                    if Delta < TweenTime then
+                        Object[2] = math.clamp(Delta + DeltaTime, 0, 1)
+                        Delta = Object[2]
+                    else
+                        Object[3] = true
+                    end
+                end
+                local NewValue = TweenService:GetValue(Delta, TweenStyle, TweenDirection)
+                local TargetPos
+                if not Reverse then
+                    TargetPos = UDim2.new(0, 0, 0, CalculateBounds(PreviousObjects).Y + (Padding * #PreviousObjects))
+                else
+                    local totalHeight = 0
+                    for j = #objs, 1, -1 do
+                        local lbl = objs[j][1]
+                        totalHeight += lbl.AbsoluteSize.Y + Padding
+                        if objs[j] == Object then
+                            TargetPos = UDim2.new(0, 0, 1, -totalHeight + Padding)
+                            break
+                        end
+                    end
+                end
+                Label.Position = Label.Position:Lerp(TargetPos, NewValue)
+                table.insert(PreviousObjects, Label)
+            end
+            data.CachedObjects = PreviousObjects
+        end
+        RunService:BindToRenderStep("UpdateNotifications", 0, function()
+            for _, data in pairs(Containers) do
+                UpdateContainer(data)
+            end
+        end)
+        local AkaliNotif = {
+            Notify = function(Properties)
+                local Title, Description, Duration, Position = Properties.Title, Properties.Description, Properties.Duration or 5, Properties.Position or "TopRight"
+                local containerData = Containers[Position] or Containers.TopRight
+                if Title or Description then
+                    local Y = Title and 26 or 0
+                    if Description then
+                        local TextSize = TextService:GetTextSize(Description, DescriptionSettings.Size, DescriptionSettings.Font, Vector2.new(0, 0))
+                        Y += math.ceil(TextSize.X / MaxWidth) * TextSize.Y + 8
+                    end
+                    local NewLabel = Round2px()
+                    NewLabel.Size = UDim2.new(1, 0, 0, Y)
+                    local slideX = containerData.SlideX
+                    local initialX, initialOffsetX = slideX, (slideX == -1 and -20 or 20)
+                    if containerData.Reverse then
+                        NewLabel.Position = UDim2.new(initialX, initialOffsetX, 1, 20)
+                    else
+                        NewLabel.Position = UDim2.new(initialX, initialOffsetX, 0, CalculateBounds(containerData.CachedObjects).Y + (Padding * #containerData.InstructionObjects))
+                    end
+                    if Title then
+                        local NewTitle = Label(Title, TitleSettings.Font, TitleSettings.Size)
+                        NewTitle.Size, NewTitle.Position, NewTitle.Parent = UDim2.new(1, -10, 0, 26), UDim2.fromOffset(10, 0), NewLabel
+                    end
+                    if Description then
+                        local NewDescription = Label(Description, DescriptionSettings.Font, DescriptionSettings.Size)
+                        NewDescription.TextWrapped, NewDescription.Size, NewDescription.Position, NewDescription.TextYAlignment, NewDescription.Parent = true, UDim2.fromScale(1, 1) + UDim2.fromOffset(-DescriptionPadding, Title and -26 or 0), UDim2.fromOffset(10, Title and 26 or 0), Enum.TextYAlignment[Title and "Top" or "Center"], NewLabel
+                    end
+                    Shadow2px().Parent = NewLabel
+                    NewLabel.Parent = containerData.Frame
+                    table.insert(containerData.InstructionObjects, {NewLabel, 0, false})
+                    coroutine.wrap(FadeOutAfter)(NewLabel, Duration, containerData.InstructionObjects)
+                end
+            end
+        }
+        local function NotifyReaperStatus()
+            local reaper = workspace:FindFirstChild("Reaper")
+            local humanoid = reaper and reaper:FindFirstChildOfClass("Humanoid")
+            if reaper and humanoid and humanoid.Health > 0 then
+                AkaliNotif.Notify({Title = "Reaper", Description = string.format("%d / %d", math.floor(humanoid.Health), humanoid.MaxHealth), Duration = 5, Position = "TopRight"})
+            else
+                AkaliNotif.Notify({Title = "Reaper", Description = "Dead", Duration = 5, Position = "TopRight"})
+            end
+        end
+        NotifyReaperStatus()
     end,
 })
 
 Tab:CreateButton({
     Name = "Where is Jack?",
-    Callback = function() local TweenService,RunService,TextService,Player=game:GetService("TweenService"),game:GetService("RunService"),game:GetService("TextService"),game:GetService("Players").LocalPlayer;local NotifGui=Instance.new("ScreenGui");NotifGui.Name="AkaliNotif";NotifGui.Parent=RunService:IsStudio() and Player.PlayerGui or game:GetService("CoreGui");local PositionsConfig={TopLeft={Anchor=Vector2.new(0,0),Pos=UDim2.new(0,20,0,20),Reverse=false,SlideX=-1},TopRight={Anchor=Vector2.new(1,0),Pos=UDim2.new(1,-20,0,20),Reverse=false,SlideX=1},DownLeft={Anchor=Vector2.new(0,1),Pos=UDim2.new(0,20,1,-20),Reverse=true,SlideX=-1},DownRight={Anchor=Vector2.new(1,1),Pos=UDim2.new(1,-20,1,-20),Reverse=true,SlideX=1},CenterLeft={Anchor=Vector2.new(0,0.5),Pos=UDim2.new(0,20,0.5,0),Reverse=false,SlideX=-1},CenterRight={Anchor=Vector2.new(1,0.5),Pos=UDim2.new(1,-20,0.5,0),Reverse=false,SlideX=1},CenterTop={Anchor=Vector2.new(0.5,0),Pos=UDim2.new(0.5,0,0,20),Reverse=false,SlideX=1},CenterDown={Anchor=Vector2.new(0.5,1),Pos=UDim2.new(0.5,0,1,-20),Reverse=true,SlideX=1}};local Containers={};for posName,cfg in pairs(PositionsConfig) do local Container=Instance.new("Frame");Container.Name="Container_"..posName;Container.BackgroundTransparency=1;Container.AnchorPoint=cfg.Anchor;Container.Position=cfg.Pos;Container.Size=UDim2.new(0,300,1,-80);Container.Parent=NotifGui;Containers[posName]={Frame=Container,InstructionObjects={},CachedObjects={},LastTick=tick(),Reverse=cfg.Reverse,SlideX=cfg.SlideX} end;local Padding,DescriptionPadding=10,10;local TweenTime,TweenStyle,TweenDirection=1,Enum.EasingStyle.Sine,Enum.EasingDirection.Out;local TitleSettings,DescriptionSettings={Font=Enum.Font.GothamSemibold,Size=14},{Font=Enum.Font.Gotham,Size=14};local MaxWidth=300-Padding-DescriptionPadding;local function Image(ID,Button) local NewImage=Instance.new(string.format("Image%s",Button and "Button" or "Label"));NewImage.Image,NewImage.BackgroundTransparency=ID,1;return NewImage end;local function Round2px() local NewImage=Image("http://www.roblox.com/asset/?id=5761488251");NewImage.ScaleType=Enum.ScaleType.Slice;NewImage.SliceCenter=Rect.new(2,2,298,298);NewImage.ImageColor3=Color3.fromRGB(30,30,30);return NewImage end;local function Shadow2px() local NewImage=Image("http://www.roblox.com/asset/?id=5761498316");NewImage.ScaleType=Enum.ScaleType.Slice;NewImage.SliceCenter=Rect.new(17,17,283,283);NewImage.Size=UDim2.fromScale(1,1)+UDim2.fromOffset(30,30);NewImage.Position=-UDim2.fromOffset(15,15);NewImage.ImageColor3=Color3.fromRGB(30,30,30);return NewImage end;local function CalculateBounds(TableOfObjects) local X,Y=0,0;for _,Object in next,TableOfObjects or {} do X+=Object.AbsoluteSize.X;Y+=Object.AbsoluteSize.Y end;return{X=X,Y=Y} end;local function Label(Text,Font,Size,Button) local Label=Instance.new(string.format("Text%s",Button and "Button" or "Label"));Label.Text,Label.Font,Label.TextSize,Label.BackgroundTransparency,Label.TextXAlignment,Label.RichText,Label.TextColor3=Text,Font,Size,1,Enum.TextXAlignment.Left,true,Color3.fromRGB(255,255,255);return Label end;local PropertyTweenOut={Text="TextTransparency",Fram="BackgroundTransparency",Imag="ImageTransparency"};local function FadeProperty(Object) local Prop=PropertyTweenOut[string.sub(Object.ClassName,1,4)];if Prop then TweenService:Create(Object,TweenInfo.new(0.25,TweenStyle,TweenDirection),{[Prop]=1}):Play() end end;local function FindIndexByDependency(Table,Dependency) for Index,Object in next,Table do if typeof(Object)=="table" then for _,v in next,Object do if v==Dependency then return Index end end elseif Object==Dependency then return Index end end end;local function ResetObjects(objs) for _,Object in next,objs do Object[2],Object[3]=0,false end end;local function FadeOutAfter(Object,Seconds,InstructionObjects) task.wait(Seconds);FadeProperty(Object);for _,SubObj in next,Object:GetDescendants() do FadeProperty(SubObj) end;task.wait(0.25);local idx=FindIndexByDependency(InstructionObjects,Object);if idx then table.remove(InstructionObjects,idx) end;ResetObjects(InstructionObjects) end;local function UpdateContainer(data) local DeltaTime=tick()-data.LastTick;data.LastTick=tick();local objs,Reverse,PreviousObjects=data.InstructionObjects,data.Reverse,{};for i,Object in ipairs(objs) do local Label,Delta,Done=Object[1],Object[2],Object[3];if not Done then if Delta<TweenTime then Object[2]=math.clamp(Delta+DeltaTime,0,1);Delta=Object[2] else Object[3]=true end end;local NewValue=TweenService:GetValue(Delta,TweenStyle,TweenDirection);local TargetPos;if not Reverse then TargetPos=UDim2.new(0,0,0,CalculateBounds(PreviousObjects).Y+(Padding*#PreviousObjects)) else local totalHeight=0;for j=#objs,1,-1 do local lbl=objs[j][1];totalHeight+=lbl.AbsoluteSize.Y+Padding;if objs[j]==Object then TargetPos=UDim2.new(0,0,1,-totalHeight+Padding);break end end end;Label.Position=Label.Position:Lerp(TargetPos,NewValue);table.insert(PreviousObjects,Label) end;data.CachedObjects=PreviousObjects end;RunService:BindToRenderStep("UpdateNotifications",0,function() for _,data in pairs(Containers) do UpdateContainer(data) end end);local AkaliNotif={Notify=function(Properties) local Title,Description,Duration,Position=Properties.Title,Properties.Description,Properties.Duration or 5,Properties.Position or "TopRight";local containerData=Containers[Position] or Containers.TopRight;if Title or Description then local Y=Title and 26 or 0;if Description then local TextSize=TextService:GetTextSize(Description,DescriptionSettings.Size,DescriptionSettings.Font,Vector2.new(0,0));Y+=math.ceil(TextSize.X/MaxWidth)*TextSize.Y+8 end;local NewLabel=Round2px();NewLabel.Size=UDim2.new(1,0,0,Y);local slideX=containerData.SlideX;local initialX,initialOffsetX=slideX,(slideX==-1 and -20 or 20);if containerData.Reverse then NewLabel.Position=UDim2.new(initialX,initialOffsetX,1,20) else NewLabel.Position=UDim2.new(initialX,initialOffsetX,0,CalculateBounds(containerData.CachedObjects).Y+(Padding*#containerData.InstructionObjects)) end;if Title then local NewTitle=Label(Title,TitleSettings.Font,TitleSettings.Size);NewTitle.Size,NewTitle.Position,NewTitle.Parent=UDim2.new(1,-10,0,26),UDim2.fromOffset(10,0),NewLabel end;if Description then local NewDescription=Label(Description,DescriptionSettings.Font,DescriptionSettings.Size);NewDescription.TextWrapped,NewDescription.Size,NewDescription.Position,NewDescription.TextYAlignment,NewDescription.Parent=true,UDim2.fromScale(1,1)+UDim2.fromOffset(-DescriptionPadding,Title and -26 or 0),UDim2.fromOffset(10,Title and 26 or 0),Enum.TextYAlignment[Title and "Top" or "Center"],NewLabel end;Shadow2px().Parent=NewLabel;NewLabel.Parent=containerData.Frame;table.insert(containerData.InstructionObjects,{NewLabel,0,false});coroutine.wrap(FadeOutAfter)(NewLabel,Duration,containerData.InstructionObjects) end end};local function NotifyJackOLanternStatus() local reaper=workspace:FindFirstChild("Jack O' Lantern");local humanoid=reaper and reaper:FindFirstChildOfClass("Humanoid");if reaper and humanoid and humanoid.Health>0 then AkaliNotif.Notify({Title="Jack O' Lantern",Description=string.format("%d / %d",math.floor(humanoid.Health),humanoid.MaxHealth),Duration=5,Position="TopRight"}) else AkaliNotif.Notify({Title="Jack O' Lantern",Description="Dead",Duration=5,Position="TopRight"}) end end;NotifyJackOLanternStatus()
+    Callback = function()
+        local TweenService, RunService, TextService, Player = game:GetService("TweenService"), game:GetService("RunService"), game:GetService("TextService"), game:GetService("Players").LocalPlayer
+        local NotifGui = Instance.new("ScreenGui")
+        NotifGui.Name = "AkaliNotif"
+        NotifGui.Parent = RunService:IsStudio() and Player.PlayerGui or game:GetService("CoreGui")
+        local PositionsConfig = {
+            TopLeft = {Anchor = Vector2.new(0,0), Pos = UDim2.new(0,20,0,20), Reverse = false, SlideX = -1},
+            TopRight = {Anchor = Vector2.new(1,0), Pos = UDim2.new(1,-20,0,20), Reverse = false, SlideX = 1},
+            DownLeft = {Anchor = Vector2.new(0,1), Pos = UDim2.new(0,20,1,-20), Reverse = true, SlideX = -1},
+            DownRight = {Anchor = Vector2.new(1,1), Pos = UDim2.new(1,-20,1,-20), Reverse = true, SlideX = 1},
+            CenterLeft = {Anchor = Vector2.new(0,0.5), Pos = UDim2.new(0,20,0.5,0), Reverse = false, SlideX = -1},
+            CenterRight = {Anchor = Vector2.new(1,0.5), Pos = UDim2.new(1,-20,0.5,0), Reverse = false, SlideX = 1},
+            CenterTop = {Anchor = Vector2.new(0.5,0), Pos = UDim2.new(0.5,0,0,20), Reverse = false, SlideX = 1},
+            CenterDown = {Anchor = Vector2.new(0.5,1), Pos = UDim2.new(0.5,0,1,-20), Reverse = true, SlideX = 1}
+        }
+        local Containers = {}
+        for posName, cfg in pairs(PositionsConfig) do
+            local Container = Instance.new("Frame")
+            Container.Name = "Container_" .. posName
+            Container.BackgroundTransparency = 1
+            Container.AnchorPoint = cfg.Anchor
+            Container.Position = cfg.Pos
+            Container.Size = UDim2.new(0, 300, 1, -80)
+            Container.Parent = NotifGui
+            Containers[posName] = {
+                Frame = Container,
+                InstructionObjects = {},
+                CachedObjects = {},
+                LastTick = tick(),
+                Reverse = cfg.Reverse,
+                SlideX = cfg.SlideX
+            }
+        end
+        local Padding, DescriptionPadding = 10, 10
+        local TweenTime, TweenStyle, TweenDirection = 1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out
+        local TitleSettings, DescriptionSettings = {Font = Enum.Font.GothamSemibold, Size = 14}, {Font = Enum.Font.Gotham, Size = 14}
+        local MaxWidth = 300 - Padding - DescriptionPadding
+        local function Image(ID, Button)
+            local NewImage = Instance.new(string.format("Image%s", Button and "Button" or "Label"))
+            NewImage.Image, NewImage.BackgroundTransparency = ID, 1
+            return NewImage
+        end
+        local function Round2px()
+            local NewImage = Image("http://www.roblox.com/asset/?id=5761488251")
+            NewImage.ScaleType = Enum.ScaleType.Slice
+            NewImage.SliceCenter = Rect.new(2, 2, 298, 298)
+            NewImage.ImageColor3 = Color3.fromRGB(30, 30, 30)
+            return NewImage
+        end
+        local function Shadow2px()
+            local NewImage = Image("http://www.roblox.com/asset/?id=5761498316")
+            NewImage.ScaleType = Enum.ScaleType.Slice
+            NewImage.SliceCenter = Rect.new(17, 17, 283, 283)
+            NewImage.Size = UDim2.fromScale(1, 1) + UDim2.fromOffset(30, 30)
+            NewImage.Position = -UDim2.fromOffset(15, 15)
+            NewImage.ImageColor3 = Color3.fromRGB(30, 30, 30)
+            return NewImage
+        end
+        local function CalculateBounds(TableOfObjects)
+            local X, Y = 0, 0
+            for _, Object in next, TableOfObjects or {} do
+                X += Object.AbsoluteSize.X
+                Y += Object.AbsoluteSize.Y
+            end
+            return {X = X, Y = Y}
+        end
+        local function Label(Text, Font, Size, Button)
+            local Label = Instance.new(string.format("Text%s", Button and "Button" or "Label"))
+            Label.Text, Label.Font, Label.TextSize, Label.BackgroundTransparency, Label.TextXAlignment, Label.RichText, Label.TextColor3 = Text, Font, Size, 1, Enum.TextXAlignment.Left, true, Color3.fromRGB(255, 255, 255)
+            return Label
+        end
+        local PropertyTweenOut = {Text = "TextTransparency", Fram = "BackgroundTransparency", Imag = "ImageTransparency"}
+        local function FadeProperty(Object)
+            local Prop = PropertyTweenOut[string.sub(Object.ClassName, 1, 4)]
+            if Prop then
+                TweenService:Create(Object, TweenInfo.new(0.25, TweenStyle, TweenDirection), {[Prop] = 1}):Play()
+            end
+        end
+        local function FindIndexByDependency(Table, Dependency)
+            for Index, Object in next, Table do
+                if typeof(Object) == "table" then
+                    for _, v in next, Object do
+                        if v == Dependency then
+                            return Index
+                        end
+                    end
+                elseif Object == Dependency then
+                    return Index
+                end
+            end
+        end
+        local function ResetObjects(objs)
+            for _, Object in next, objs do
+                Object[2], Object[3] = 0, false
+            end
+        end
+        local function FadeOutAfter(Object, Seconds, InstructionObjects)
+            task.wait(Seconds)
+            FadeProperty(Object)
+            for _, SubObj in next, Object:GetDescendants() do
+                FadeProperty(SubObj)
+            end
+            task.wait(0.25)
+            local idx = FindIndexByDependency(InstructionObjects, Object)
+            if idx then
+                table.remove(InstructionObjects, idx)
+            end
+            ResetObjects(InstructionObjects)
+        end
+        local function UpdateContainer(data)
+            local DeltaTime = tick() - data.LastTick
+            data.LastTick = tick()
+            local objs, Reverse, PreviousObjects = data.InstructionObjects, data.Reverse, {}
+            for i, Object in ipairs(objs) do
+                local Label, Delta, Done = Object[1], Object[2], Object[3]
+                if not Done then
+                    if Delta < TweenTime then
+                        Object[2] = math.clamp(Delta + DeltaTime, 0, 1)
+                        Delta = Object[2]
+                    else
+                        Object[3] = true
+                    end
+                end
+                local NewValue = TweenService:GetValue(Delta, TweenStyle, TweenDirection)
+                local TargetPos
+                if not Reverse then
+                    TargetPos = UDim2.new(0, 0, 0, CalculateBounds(PreviousObjects).Y + (Padding * #PreviousObjects))
+                else
+                    local totalHeight = 0
+                    for j = #objs, 1, -1 do
+                        local lbl = objs[j][1]
+                        totalHeight += lbl.AbsoluteSize.Y + Padding
+                        if objs[j] == Object then
+                            TargetPos = UDim2.new(0, 0, 1, -totalHeight + Padding)
+                            break
+                        end
+                    end
+                end
+                Label.Position = Label.Position:Lerp(TargetPos, NewValue)
+                table.insert(PreviousObjects, Label)
+            end
+            data.CachedObjects = PreviousObjects
+        end
+        RunService:BindToRenderStep("UpdateNotifications", 0, function()
+            for _, data in pairs(Containers) do
+                UpdateContainer(data)
+            end
+        end)
+        local AkaliNotif = {
+            Notify = function(Properties)
+                local Title, Description, Duration, Position = Properties.Title, Properties.Description, Properties.Duration or 5, Properties.Position or "TopRight"
+                local containerData = Containers[Position] or Containers.TopRight
+                if Title or Description then
+                    local Y = Title and 26 or 0
+                    if Description then
+                        local TextSize = TextService:GetTextSize(Description, DescriptionSettings.Size, DescriptionSettings.Font, Vector2.new(0, 0))
+                        Y += math.ceil(TextSize.X / MaxWidth) * TextSize.Y + 8
+                    end
+                    local NewLabel = Round2px()
+                    NewLabel.Size = UDim2.new(1, 0, 0, Y)
+                    local slideX = containerData.SlideX
+                    local initialX, initialOffsetX = slideX, (slideX == -1 and -20 or 20)
+                    if containerData.Reverse then
+                        NewLabel.Position = UDim2.new(initialX, initialOffsetX, 1, 20)
+                    else
+                        NewLabel.Position = UDim2.new(initialX, initialOffsetX, 0, CalculateBounds(containerData.CachedObjects).Y + (Padding * #containerData.InstructionObjects))
+                    end
+                    if Title then
+                        local NewTitle = Label(Title, TitleSettings.Font, TitleSettings.Size)
+                        NewTitle.Size, NewTitle.Position, NewTitle.Parent = UDim2.new(1, -10, 0, 26), UDim2.fromOffset(10, 0), NewLabel
+                    end
+                    if Description then
+                        local NewDescription = Label(Description, DescriptionSettings.Font, DescriptionSettings.Size)
+                        NewDescription.TextWrapped, NewDescription.Size, NewDescription.Position, NewDescription.TextYAlignment, NewDescription.Parent = true, UDim2.fromScale(1, 1) + UDim2.fromOffset(-DescriptionPadding, Title and -26 or 0), UDim2.fromOffset(10, Title and 26 or 0), Enum.TextYAlignment[Title and "Top" or "Center"], NewLabel
+                    end
+                    Shadow2px().Parent = NewLabel
+                    NewLabel.Parent = containerData.Frame
+                    table.insert(containerData.InstructionObjects, {NewLabel, 0, false})
+                    coroutine.wrap(FadeOutAfter)(NewLabel, Duration, containerData.InstructionObjects)
+                end
+            end
+        }
+        local function NotifyJackOLanternStatus()
+            local reaper = workspace:FindFirstChild("Jack O' Lantern")
+            local humanoid = reaper and reaper:FindFirstChildOfClass("Humanoid")
+            if reaper and humanoid and humanoid.Health > 0 then
+                AkaliNotif.Notify({Title = "Jack O' Lantern", Description = string.format("%d / %d", math.floor(humanoid.Health), humanoid.MaxHealth), Duration = 5, Position = "TopRight"})
+            else
+                AkaliNotif.Notify({Title = "Jack O' Lantern", Description = "Dead", Duration = 5, Position = "TopRight"})
+            end
+        end
+        NotifyJackOLanternStatus()
     end,
 })
 
---- Check ----------------------------------------------------------
+--- Killer ----------------------------------------------------------
 
 Tab:CreateButton({
     Name = "Reaper",
@@ -91,8 +470,9 @@ Tab:CreateButton({
                 root.CFrame = getgenv().ReaperOldPos
             end
         end
-    end
+    end,
 })
+
 Tab:CreateButton({
     Name = "Jack",
     Callback = function()
@@ -129,7 +509,7 @@ Tab:CreateButton({
                 root.CFrame = getgenv().JackOldPos
             end
         end
-    end
+    end,
 })
 
 --- Max Zoom ----------------------------------------------------------
@@ -146,7 +526,12 @@ Tab:CreateButton({
 Tab:CreateButton({
     Name = "Full Bright",
     Callback = function()
-        local L = game:GetService("Lighting"); L.Brightness = 2; L.ClockTime = 14; L.FogEnd = 100000; L.GlobalShadows = false; L.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+        local L = game:GetService("Lighting")
+        L.Brightness = 2
+        L.ClockTime = 14
+        L.FogEnd = 100000
+        L.GlobalShadows = false
+        L.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
     end,
 })
 
@@ -155,7 +540,13 @@ Tab:CreateButton({
 Tab:CreateButton({
     Name = "No Fog",
     Callback = function()
-        local L = game:GetService("Lighting"); L.FogEnd = 100000; for _, v in pairs(L:GetDescendants()) do if v:IsA("Atmosphere") then v:Destroy() end end
+        local L = game:GetService("Lighting")
+        L.FogEnd = 100000
+        for _, v in pairs(L:GetDescendants()) do
+            if v:IsA("Atmosphere") then
+                v:Destroy()
+            end
+        end
     end,
 })
 
@@ -164,7 +555,99 @@ Tab:CreateButton({
 Tab:CreateButton({
     Name = "Anim",
     Callback = function()
-        local P=game:GetService("Players");local UIS=game:GetService("UserInputService");local L=P.LocalPlayer;local A={idle="http://www.roblox.com/asset/?id=180435571",walk="http://www.roblox.com/asset/?id=180426354",jump="http://www.roblox.com/asset/?id=125750702",fall="http://www.roblox.com/asset/?id=180436148"};local MK={[Enum.KeyCode.W]=true,[Enum.KeyCode.A]=true,[Enum.KeyCode.S]=true,[Enum.KeyCode.D]=true};if _G.__animControllerCleanup then _G.__animControllerCleanup() end;local AC={};local function Cl() for _,c in ipairs(AC) do c:Disconnect() end;table.clear(AC) end;_G.__animControllerCleanup=Cl;local function St(Ch) Cl();local function DA(c) local a=c:FindFirstChild("Animate") if a and a:IsA("Script") then a.Disabled=true end end;Ch.ChildAdded:Connect(DA);DA(Ch:FindFirstChild("Animate"));local H=Ch:WaitForChild("Humanoid");local An=H:WaitForChild("Animator");local Lo={};for n,id in pairs(A) do local an=Instance.new("Animation");an.AnimationId=id;Lo[n]=An:LoadAnimation(an) end;local PM=0;local CT=nil;local function Pl(n) if CT==Lo[n] and CT.IsPlaying then return end;if CT then CT:Stop(0.1) end;CT=Lo[n];CT:Play(0.1) end;table.insert(AC,An.AnimationPlayed:Connect(function(t) if t~=Lo.idle and t~=Lo.walk and t~=Lo.jump and t~=Lo.fall then t:Stop(0) end end));table.insert(AC,UIS.InputBegan:Connect(function(i,g) if g then return end;if MK[i.KeyCode] then PM+=1 end end));table.insert(AC,UIS.InputEnded:Connect(function(i) if MK[i.KeyCode] then PM=math.max(0,PM-1) end end));table.insert(AC,H.StateChanged:Connect(function(_,s) if s==Enum.HumanoidStateType.Jumping then Pl("jump") elseif s==Enum.HumanoidStateType.Freefall then Pl("fall") end end));table.insert(AC,H.Running:Connect(function(s) if s>0.5 then Pl(PM>0 and "walk" or "idle") else Pl("idle") end end)) end;L.CharacterAdded:Connect(function(Ch) task.wait(0.5);St(Ch) end);if L.Character then task.wait(0.5);St(L.Character) end
+        local P = game:GetService("Players")
+        local UIS = game:GetService("UserInputService")
+        local L = P.LocalPlayer
+        local A = {
+            idle = "http://www.roblox.com/asset/?id=180435571",
+            walk = "http://www.roblox.com/asset/?id=180426354",
+            jump = "http://www.roblox.com/asset/?id=125750702",
+            fall = "http://www.roblox.com/asset/?id=180436148"
+        }
+        local MK = {
+            [Enum.KeyCode.W] = true,
+            [Enum.KeyCode.A] = true,
+            [Enum.KeyCode.S] = true,
+            [Enum.KeyCode.D] = true
+        }
+        if _G.__animControllerCleanup then
+            _G.__animControllerCleanup()
+        end
+        local AC = {}
+        local function Cl()
+            for _, c in ipairs(AC) do
+                c:Disconnect()
+            end
+            table.clear(AC)
+        end
+        _G.__animControllerCleanup = Cl
+        local function St(Ch)
+            Cl()
+            local function DA(c)
+                local a = c:FindFirstChild("Animate")
+                if a and a:IsA("Script") then
+                    a.Disabled = true
+                end
+            end
+            Ch.ChildAdded:Connect(DA)
+            DA(Ch:FindFirstChild("Animate"))
+            local H = Ch:WaitForChild("Humanoid")
+            local An = H:WaitForChild("Animator")
+            local Lo = {}
+            for n, id in pairs(A) do
+                local an = Instance.new("Animation")
+                an.AnimationId = id
+                Lo[n] = An:LoadAnimation(an)
+            end
+            local PM = 0
+            local CT = nil
+            local function Pl(n)
+                if CT == Lo[n] and CT.IsPlaying then return end
+                if CT then
+                    CT:Stop(0.1)
+                end
+                CT = Lo[n]
+                CT:Play(0.1)
+            end
+            table.insert(AC, An.AnimationPlayed:Connect(function(t)
+                if t ~= Lo.idle and t ~= Lo.walk and t ~= Lo.jump and t ~= Lo.fall then
+                    t:Stop(0)
+                end
+            end))
+            table.insert(AC, UIS.InputBegan:Connect(function(i, g)
+                if g then return end
+                if MK[i.KeyCode] then
+                    PM += 1
+                end
+            end))
+            table.insert(AC, UIS.InputEnded:Connect(function(i)
+                if MK[i.KeyCode] then
+                    PM = math.max(0, PM - 1)
+                end
+            end))
+            table.insert(AC, H.StateChanged:Connect(function(_, s)
+                if s == Enum.HumanoidStateType.Jumping then
+                    Pl("jump")
+                elseif s == Enum.HumanoidStateType.Freefall then
+                    Pl("fall")
+                end
+            end))
+            table.insert(AC, H.Running:Connect(function(s)
+                if s > 0.5 then
+                    Pl(PM > 0 and "walk" or "idle")
+                else
+                    Pl("idle")
+                end
+            end))
+        end
+        L.CharacterAdded:Connect(function(Ch)
+            task.wait(0.5)
+            St(Ch)
+        end)
+        if L.Character then
+            task.wait(0.5)
+            St(L.Character)
+        end
     end,
 })
 
@@ -172,7 +655,8 @@ Tab:CreateButton({
 
 Tab:CreateButton({
     Name = "Tool",
-    Callback = function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Gunmod"))()
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ukav/ukav/refs/heads/main/Gunmod"))()
     end,
 })
 
@@ -180,15 +664,24 @@ Tab:CreateButton({
 
 Tab:CreateButton({
     Name = "Bypass",
-    Callback = function() task.spawn(function() local player = game.Players.LocalPlayer; local char = player.Character or player.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); local originalCF = root.CFrame; local entrance = workspace:FindFirstChild("Ground") and workspace.Ground:FindFirstChild("Entrance"); while entrance and entrance.CanCollide == true do root.CFrame = CFrame.new(624, 1090, 750.5); task.wait(1.5) end; local oldGravity = workspace.Gravity; workspace.Gravity = 240; root.CFrame = CFrame.new(624, 1090 + 10, 750.5); task.wait(1); workspace.Gravity = oldGravity; root.CFrame = originalCF end)
-    end,
-})
-
---- Instant Prompt ----------------------------------------------------------
-
-Tab:CreateButton({
-    Name = "Instant Prompt v2 ",
-    Callback = function() game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(prompt) task.wait(0.1) fireproximityprompt(prompt) end)
+    Callback = function()
+        task.spawn(function()
+            local player = game.Players.LocalPlayer
+            local char = player.Character or player.CharacterAdded:Wait()
+            local root = char:WaitForChild("HumanoidRootPart")
+            local originalCF = root.CFrame
+            local entrance = workspace:FindFirstChild("Ground") and workspace.Ground:FindFirstChild("Entrance")
+            while entrance and entrance.CanCollide == true do
+                root.CFrame = CFrame.new(624, 1090, 750.5)
+                task.wait(1.5)
+            end
+            local oldGravity = workspace.Gravity
+            workspace.Gravity = 240
+            root.CFrame = CFrame.new(624, 1090 + 10, 750.5)
+            task.wait(1)
+            workspace.Gravity = oldGravity
+            root.CFrame = originalCF
+        end)
     end,
 })
 
@@ -198,20 +691,31 @@ Tab:CreateToggle({
     Name = "Godmode",
     CurrentValue = false,
     Flag = "GodmodeToggle",
-    Callback = function(Value) 
-        godModeEnabled = Value; 
-        if not Value then restoreCollisions() end 
+    Callback = function(Value)
+        godModeEnabled = Value
+        if not Value then
+            restoreCollisions()
+        end
     end,
 })
 
 --- Instant Prompt ----------------------------------------------------------
 
 Tab:CreateToggle({
-    Name = "Instant Prompt v1",
+    Name = "Instant Prompt",
     CurrentValue = false,
-    Flag = "InstantPrompt",
-    Callback = function(Value) instantPrompt = Value end,
+    Callback = function(Value)
+        getgenv().InstantPromptEnabled = Value
+    end,
 })
+if not getgenv().InstantPromptConn then
+    getgenv().InstantPromptConn = game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(prompt)
+        if getgenv().InstantPromptEnabled then
+            task.wait(0.1)
+            fireproximityprompt(prompt)
+        end
+    end)
+end
 
 --- Auto Bypass ----------------------------------------------------------
 
@@ -219,8 +723,39 @@ local Toggle = Tab:CreateToggle({
     Name = "Auto Bypass",
     CurrentValue = false,
     Flag = "AutoBypassToggle",
-    Callback = function(Value) 
-        if Value then local player = game.Players.LocalPlayer autoBypassConnection = player.CharacterAdded:Connect(function(char) task.spawn(function() task.wait(0.1) local root = char:WaitForChild("HumanoidRootPart", 5) if root then local originalCF = root.CFrame teleportToLobby(root) root.CFrame = originalCF end end) end) if player.Character then task.spawn(function() task.wait(0.1) local root = player.Character:WaitForChild("HumanoidRootPart", 5) if root then local originalCF = root.CFrame teleportToLobby(root) root.CFrame = originalCF end end) end else if autoBypassConnection then autoBypassConnection:Disconnect() autoBypassConnection = nil end end 
+    Callback = function(Value)
+        if Value then
+            local player = game.Players.LocalPlayer
+            autoBypassConnection = player.CharacterAdded:Connect(function(char)
+                task.spawn(function()
+                    task.wait(0.1)
+                    local root = char:WaitForChild("HumanoidRootPart", 5)
+                    if root then
+                        local originalCF = root.CFrame
+                        teleportToLobby(root)
+                        task.wait(0.1)
+                        root.CFrame = originalCF
+                    end
+                end)
+            end)
+            if player.Character then
+                task.spawn(function()
+                    task.wait(0.1)
+                    local root = player.Character:WaitForChild("HumanoidRootPart", 5)
+                    if root then
+                        local originalCF = root.CFrame
+                        teleportToLobby(root)
+                        task.wait(0.1)
+                        root.CFrame = originalCF
+                    end
+                end)
+            end
+        else
+            if autoBypassConnection then
+                autoBypassConnection:Disconnect()
+                autoBypassConnection = nil
+            end
+        end
     end,
 })
 
@@ -230,14 +765,18 @@ Tab:CreateToggle({
     Name = "Auto Heal",
     CurrentValue = false,
     Flag = "AutoHealToggle",
-    Callback = function(Value) healToggle = Value end,
+    Callback = function(Value)
+        healToggle = Value
+    end,
 })
 
 Tab:CreateToggle({
     Name = "Aura",
     CurrentValue = false,
     Flag = "AuraToggle",
-    Callback = function(Value) toggle = Value end,
+    Callback = function(Value)
+        toggle = Value
+    end,
 })
 
 Tab:CreateSlider({
@@ -247,7 +786,9 @@ Tab:CreateSlider({
    Suffix = "studs",
    CurrentValue = 20,
    Flag = "AuraRadius",
-   Callback = function(Value) radius = Value end,
+   Callback = function(Value)
+       radius = Value
+   end,
 })
 
 --- Weapons Section ----------------------------------------------------------
@@ -260,70 +801,205 @@ WeaponTab:CreateSection("Weapons")
 WeaponTab:CreateButton({
     Name = "Get HEX Gun",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local targetPart = game:GetService("Workspace")["Floor 2"].GetHEXGun.Head; root.CFrame = targetPart.CFrame; task.wait(0.1); resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local targetPart = game:GetService("Workspace")["Floor 2"].GetHEXGun.Head
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get LXW",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local targetPart = game:GetService("Workspace"):WaitForChild("Exit"); root.CFrame = targetPart.CFrame; task.wait(0.1); resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local targetPart = game:GetService("Workspace"):WaitForChild("Exit")
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Vulcan",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local targetPart = game:GetService("Workspace"):WaitForChild("LavaZone"):WaitForChild("Escape"):WaitForChild("Head"); root.CFrame = targetPart.CFrame; task.wait(0.1); resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local targetPart = game:GetService("Workspace"):WaitForChild("LavaZone"):WaitForChild("Escape"):WaitForChild("Head")
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Ice Crossbow",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local targetPart = game:GetService("Workspace"):WaitForChild("IceZone"):WaitForChild("GetIceCrossbow"):WaitForChild("Head"); root.CFrame = targetPart.CFrame; task.wait(0.1); resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local targetPart = game:GetService("Workspace"):WaitForChild("IceZone"):WaitForChild("GetIceCrossbow"):WaitForChild("Head")
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Red Missile Launcher",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local targetPart = game:GetService("Workspace"):WaitForChild("Floor 2"):WaitForChild("GetRedMissile"):WaitForChild("Head"); root.CFrame = targetPart.CFrame; task.wait(0.1); resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local targetPart = game:GetService("Workspace"):WaitForChild("Floor 2"):WaitForChild("GetRedMissile"):WaitForChild("Head")
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Burning Sword v1",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); local camera = workspace.CurrentCamera; teleportToLobby(root); local function getNearestPrompt() local nearest, shortest = nil, math.huge; for _, v in pairs(workspace:GetDescendants()) do if v:IsA("ProximityPrompt") and v.Enabled then local part = v.Parent:IsA("BasePart") and v.Parent; if part then local dist = (root.Position - part.Position).Magnitude; if dist < shortest then shortest = dist; nearest = v end end end end; return nearest end; local function spamPrompt(prompt) local startTime = tick(); while tick() - startTime < 0.1 do prompt:InputHoldBegin(); prompt:InputHoldEnd(); task.wait() end end; camera.CFrame = CFrame.new(598, 1166, 759, 1, 0, 0, 0, 0, 1, 0, 1, 0); local waypoints = {Vector3.new(-268, 1052, 1128), Vector3.new(-268, 1052, 1189), Vector3.new(-174, 1062, 1138), Vector3.new(-174, 1062, 1178), Vector3.new(-134, 1062, 1178), Vector3.new(-135, 1062, 1139), Vector3.new(-20, 1052, 1159)}; for _, pos in ipairs(waypoints) do root.CFrame = CFrame.new(pos); task.wait(0.1); local prompt = getNearestPrompt(); if prompt then spamPrompt(prompt) end end; root.CFrame = CFrame.new(63, 1079, 1159); task.wait(1); resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        local camera = workspace.CurrentCamera
+        teleportToLobby(root)
+        local function getNearestPrompt()
+            local nearest, shortest = nil, math.huge
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v:IsA("ProximityPrompt") and v.Enabled then
+                    local part = v.Parent:IsA("BasePart") and v.Parent
+                    if part then
+                        local dist = (root.Position - part.Position).Magnitude
+                        if dist < shortest then
+                            shortest = dist
+                            nearest = v
+                        end
+                    end
+                end
+            end
+            return nearest
+        end
+        local function spamPrompt(prompt)
+            local startTime = tick()
+            while tick() - startTime < 0.1 do
+                prompt:InputHoldBegin()
+                prompt:InputHoldEnd()
+                task.wait()
+            end
+        end
+        camera.CFrame = CFrame.new(598, 1166, 759, 1, 0, 0, 0, 0, 1, 0, 1, 0)
+        local waypoints = {
+            Vector3.new(-268, 1052, 1128),
+            Vector3.new(-268, 1052, 1189),
+            Vector3.new(-174, 1062, 1138),
+            Vector3.new(-174, 1062, 1178),
+            Vector3.new(-134, 1062, 1178),
+            Vector3.new(-135, 1062, 1139),
+            Vector3.new(-20, 1052, 1159)
+        }
+        for _, pos in ipairs(waypoints) do
+            root.CFrame = CFrame.new(pos)
+            task.wait(0.1)
+            local prompt = getNearestPrompt()
+            if prompt then
+                spamPrompt(prompt)
+            end
+        end
+        root.CFrame = CFrame.new(63, 1079, 1159)
+        task.wait(1)
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Burning Sword v2",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); repeat task.wait(); root.CFrame = Workspace.Incinerator.ChallengeButton7.Button.CFrame; fireproximityprompt(Workspace.Incinerator.ChallengeButton7.Button.ProximityPrompt, 0) until Workspace.Incinerator.ChallengeButton7.Button.ProximityPrompt.Enabled == false; root.CFrame = CFrame.new(61, 1062, 1158); task.wait(1); resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        repeat
+            task.wait()
+            root.CFrame = Workspace.Incinerator.ChallengeButton7.Button.CFrame
+            fireproximityprompt(Workspace.Incinerator.ChallengeButton7.Button.ProximityPrompt, 0)
+        until Workspace.Incinerator.ChallengeButton7.Button.ProximityPrompt.Enabled == false
+        root.CFrame = CFrame.new(61, 1062, 1158)
+        task.wait(1)
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Water Gun",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); repeat task.wait(); root.CFrame = workspace.Sewer.Valve1.CFrame; fireproximityprompt(workspace.Sewer.Valve1.ProximityPrompt, 0) until workspace.Sewer.Valve1.ProximityPrompt.Enabled == false; repeat task.wait(); root.CFrame = workspace.Sewer.Valve2.CFrame; fireproximityprompt(workspace.Sewer.Valve2.ProximityPrompt, 0) until workspace.Sewer.Valve2.ProximityPrompt.Enabled == false; root.CFrame = CFrame.new(-362, 960, -54); task.wait(1); resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        repeat
+            task.wait()
+            root.CFrame = workspace.Sewer.Valve1.CFrame
+            fireproximityprompt(workspace.Sewer.Valve1.ProximityPrompt, 0)
+        until workspace.Sewer.Valve1.ProximityPrompt.Enabled == false
+        repeat
+            task.wait()
+            root.CFrame = workspace.Sewer.Valve2.CFrame
+            fireproximityprompt(workspace.Sewer.Valve2.ProximityPrompt, 0)
+        until workspace.Sewer.Valve2.ProximityPrompt.Enabled == false
+        root.CFrame = CFrame.new(-362, 960, -54)
+        task.wait(1)
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Reaper's Scythe",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local targetPart = game:GetService("Workspace").GetReaperGun; root.CFrame = targetPart.CFrame; task.wait(0.1); resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local targetPart = game:GetService("Workspace").GetReaperGun
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Sheriff's Revolver",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local targetPart = game:GetService("Workspace").GetJackGun; root.CFrame = targetPart.CFrame; task.wait(0.1); resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local targetPart = game:GetService("Workspace").GetJackGun
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
+        resetCharacter()
     end,
 })
 
@@ -337,49 +1013,120 @@ Section:Set("Event Weapons")
 WeaponTab:CreateButton({
     Name = "Get RGB",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam"); root.CFrame = portal.CFrame; task.wait(1); local targetPart = workspace:WaitForChild("CorruptedZone"):WaitForChild("RGB - 9999 Cell"):WaitForChild("Head"); root.CFrame = targetPart.CFrame; task.wait(0.1); resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        root.CFrame = portal.CFrame
+        task.wait(1)
+        local targetPart = workspace:WaitForChild("CorruptedZone"):WaitForChild("RGB - 9999 Cell"):WaitForChild("Head")
+        root.CFrame = targetPart.CFrame
+        task.wait(0.1)
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Scarecrow's Skull",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam"); root.CFrame = portal.CFrame; task.wait(1); local targetPart = workspace:WaitForChild("GetScarecrowSkull"); root.CFrame = targetPart.CFrame; resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        root.CFrame = portal.CFrame
+        task.wait(1)
+        local targetPart = workspace:WaitForChild("GetScarecrowSkull")
+        root.CFrame = targetPart.CFrame
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Mech O' Matic",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam"); root.CFrame = portal.CFrame; task.wait(1); local targetPart = game:GetService("Workspace"):WaitForChild("CyberLand"):WaitForChild("GetMechGun"); root.CFrame = targetPart.CFrame; resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        root.CFrame = portal.CFrame
+        task.wait(1)
+        local targetPart = game:GetService("Workspace"):WaitForChild("CyberLand"):WaitForChild("GetMechGun")
+        root.CFrame = targetPart.CFrame
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Crescendo",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam"); root.CFrame = portal.CFrame; task.wait(1); local targetPart = game:GetService("Workspace"):WaitForChild("GetCrescendo"); root.CFrame = targetPart.CFrame; resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        root.CFrame = portal.CFrame
+        task.wait(1)
+        local targetPart = game:GetService("Workspace"):WaitForChild("GetCrescendo")
+        root.CFrame = targetPart.CFrame
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Corrupted Rifle",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam"); root.CFrame = portal.CFrame; task.wait(1); local exitHead = game:GetService("Workspace"):WaitForChild("NightCity"):WaitForChild("Exit"):WaitForChild("Head"); root.CFrame = exitHead.CFrame; resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        root.CFrame = portal.CFrame
+        task.wait(1)
+        local exitHead = game:GetService("Workspace"):WaitForChild("NightCity"):WaitForChild("Exit"):WaitForChild("Head")
+        root.CFrame = exitHead.CFrame
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get LXD",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam"); root.CFrame = portal.CFrame; task.wait(1); local targetHead = game:GetService("Workspace"):WaitForChild("DeadGround"):WaitForChild("LXD - 9999 Cell"):WaitForChild("Head"); root.CFrame = targetHead.CFrame; resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
+        root.CFrame = portal.CFrame
+        task.wait(1)
+        local targetHead = game:GetService("Workspace"):WaitForChild("DeadGround"):WaitForChild("LXD - 9999 Cell"):WaitForChild("Head")
+        root.CFrame = targetHead.CFrame
+        resetCharacter()
     end,
 })
 
 WeaponTab:CreateButton({
     Name = "Get Dual LX3",
     Callback = function()
-        local Players = game:GetService("Players"); local LocalPlayer = Players.LocalPlayer; local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); teleportToLobby(root); local portal = game:GetService("Workspace"):WaitForChild("DarkPortal"):WaitForChild("Beam"); root.CFrame = portal.CFrame; task.wait(1); local targetHead = game:GetService("Workspace").MazeWorld["ESCAPE FROM THIS HELL"].Head; root.CFrame = targetHead.CFrame; resetCharacter()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+        teleportToLobby(root)
+        local portal = game:GetService("Workspace"):WaitForChild("DarkPortal"):WaitForChild("Beam")
+        root.CFrame = portal.CFrame
+        task.wait(1)
+        local targetHead = game:GetService("Workspace").MazeWorld["ESCAPE FROM THIS HELL"].Head
+        root.CFrame = targetHead.CFrame
+        resetCharacter()
     end,
 })
 
