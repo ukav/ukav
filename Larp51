@@ -172,6 +172,13 @@ Tab:CreateButton({
     Callback = function() task.spawn(function() local player = game.Players.LocalPlayer; local char = player.Character or player.CharacterAdded:Wait(); local root = char:WaitForChild("HumanoidRootPart"); local originalCF = root.CFrame; local entrance = workspace:FindFirstChild("Ground") and workspace.Ground:FindFirstChild("Entrance"); while entrance and entrance.CanCollide == true do root.CFrame = CFrame.new(624, 1090, 750.5); task.wait(1.5) end; local oldGravity = workspace.Gravity; workspace.Gravity = 240; root.CFrame = CFrame.new(624, 1090 + 10, 750.5); task.wait(1); workspace.Gravity = oldGravity; root.CFrame = originalCF end) end,
 })
 
+--- Instant Prompt ----------------------------------------------------------
+
+Tab:CreateButton({
+    Name = "Instant Prompt v2 ",
+    Callback = function() game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(prompt) task.wait(0.1) fireproximityprompt(prompt) end) end,
+})
+
 --- Godmode ----------------------------------------------------------
 
 Tab:CreateToggle({
@@ -187,7 +194,7 @@ Tab:CreateToggle({
 --- Instant Prompt ----------------------------------------------------------
 
 Tab:CreateToggle({
-    Name = "Instant Prompt",
+    Name = "Instant Prompt v1",
     CurrentValue = false,
     Flag = "InstantPrompt",
     Callback = function(Value) instantPrompt = Value end,
