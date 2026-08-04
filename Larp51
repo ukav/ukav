@@ -555,102 +555,163 @@ Tab:CreateButton({
 --- Animation ----------------------------------------------------------
 
 Tab:CreateButton({
-    Name = "Anim",
-    Callback = function()
-        local P = game:GetService("Players")
-        local UIS = game:GetService("UserInputService")
-        local L = P.LocalPlayer
-        local A = {
-            idle = "http://www.roblox.com/asset/?id=180435571",
-            walk = "http://www.roblox.com/asset/?id=180426354",
-            jump = "http://www.roblox.com/asset/?id=125750702",
-            fall = "http://www.roblox.com/asset/?id=180436148"
-        }
-        local MK = {
-            [Enum.KeyCode.W] = true,
-            [Enum.KeyCode.A] = true,
-            [Enum.KeyCode.S] = true,
-            [Enum.KeyCode.D] = true
-        }
-        if _G.__animControllerCleanup then
-            _G.__animControllerCleanup()
-        end
-        local AC = {}
-        local function Cl()
-            for _, c in ipairs(AC) do
-                c:Disconnect()
-            end
-            table.clear(AC)
-        end
-        _G.__animControllerCleanup = Cl
-        local function St(Ch)
-            Cl()
-            local function DA(c)
-                local a = c:FindFirstChild("Animate")
-                if a and a:IsA("Script") then
-                    a.Disabled = true
-                end
-            end
-            Ch.ChildAdded:Connect(DA)
-            DA(Ch:FindFirstChild("Animate"))
-            local H = Ch:WaitForChild("Humanoid")
-            local An = H:WaitForChild("Animator")
-            local Lo = {}
-            for n, id in pairs(A) do
-                local an = Instance.new("Animation")
-                an.AnimationId = id
-                Lo[n] = An:LoadAnimation(an)
-            end
-            local PM = 0
-            local CT = nil
-            local function Pl(n)
-                if CT == Lo[n] and CT.IsPlaying then return end
-                if CT then
-                    CT:Stop(0.1)
-                end
-                CT = Lo[n]
-                CT:Play(0.1)
-            end
-            table.insert(AC, An.AnimationPlayed:Connect(function(t)
-                if t ~= Lo.idle and t ~= Lo.walk and t ~= Lo.jump and t ~= Lo.fall then
-                    t:Stop(0)
-                end
-            end))
-            table.insert(AC, UIS.InputBegan:Connect(function(i, g)
-                if g then return end
-                if MK[i.KeyCode] then
-                    PM += 1
-                end
-            end))
-            table.insert(AC, UIS.InputEnded:Connect(function(i)
-                if MK[i.KeyCode] then
-                    PM = math.max(0, PM - 1)
-                end
-            end))
-            table.insert(AC, H.StateChanged:Connect(function(_, s)
-                if s == Enum.HumanoidStateType.Jumping then
-                    Pl("jump")
-                elseif s == Enum.HumanoidStateType.Freefall then
-                    Pl("fall")
-                end
-            end))
-            table.insert(AC, H.Running:Connect(function(s)
-                if s > 0.5 then
-                    Pl(PM > 0 and "walk" or "idle")
-                else
-                    Pl("idle")
-                end
-            end))
-        end
-        L.CharacterAdded:Connect(function(Ch)
-            task.wait(0.5)
-            St(Ch)
-        end)
-        if L.Character then
-            task.wait(0.5)
-            St(L.Character)
-        end
-    end,
+	Name = "Anim",
+	Callback = function()
+		local Players = game:GetService("Players")
+		local UserInputService = game:GetService("UserInputService")
+		local LocalPlayer = Players.LocalPlayer
+
+		local ANIMS = {
+			idle = "http://www.roblox.com/asset/?id=180435571",
+			walk = "http://www.roblox.com/asset/?id=180426354",
+			jump = "http://www.roblox.com/asset/?id=125750702",
+			fall = "http://www.roblox.com/asset/?id=180436148",
+		}
+
+		local moveKeys = {
+			[Enum.KeyCode.W] = true,
+			[Enum.KeyCode.A] = true,
+			[Enum.KeyCode.S] = true,
+			[Enum.KeyCode.D] = true,
+		}
+
+		local BASE_WALK_SPEED = 16
+
+		local activeConnections = {}
+
+		local function cleanup()
+			for _, conn in ipairs(activeConnections) do
+				conn:Disconnect()
+			end
+			table.clear(activeConnections)
+		end
+
+		local function setup(character)
+			cleanup()
+
+			local function disableAnimate(char)
+				local animate = char:FindFirstChild("Animate")
+				if animate then
+					animate.Disabled = true
+				end
+			end
+
+			table.insert(activeConnections, character.ChildAdded:Connect(disableAnimate))
+			disableAnimate(character)
+
+			local humanoid = character:WaitForChild("Humanoid")
+			local animator = humanoid:WaitForChild("Animator")
+
+			local loaded = {}
+			for name, id in pairs(ANIMS) do
+				local anim = Instance.new("Animation")
+				anim.AnimationId = id
+				
+				local track = animator:LoadAnimation(anim)
+				track.Priority = Enum.AnimationPriority.Action4
+				
+				if name == "idle" or name == "walk" then
+					track.Looped = true
+				else
+					track.Looped = false
+				end
+				
+				loaded[name] = track
+			end
+
+			local pressedMoveKeys = 0
+			local currentTrack = nil
+
+			local function play(name, fadeTime)
+				fadeTime = fadeTime or 0.25
+				local targetTrack = loaded[name]
+				
+				if currentTrack == targetTrack and currentTrack.IsPlaying then 
+					return 
+				end
+				
+				if currentTrack then 
+					currentTrack:Stop(fadeTime) 
+				end
+				
+				currentTrack = targetTrack
+				if currentTrack then
+					currentTrack:Play(fadeTime)
+				end
+			end
+
+			table.insert(activeConnections, animator.AnimationPlayed:Connect(function(track)
+				if track ~= loaded.idle and track ~= loaded.walk
+					and track ~= loaded.jump and track ~= loaded.fall then
+					track:Stop(0)
+				end
+			end))
+
+			table.insert(activeConnections, UserInputService.InputBegan:Connect(function(input, gpe)
+				if gpe then return end
+				if moveKeys[input.KeyCode] then
+					pressedMoveKeys += 1
+					local state = humanoid:GetState()
+					if state == Enum.HumanoidStateType.Running or state == Enum.HumanoidStateType.RunningNoPhysics then
+						play("walk", 0.2)
+					end
+				end
+			end))
+
+			table.insert(activeConnections, UserInputService.InputEnded:Connect(function(input, gpe)
+				if moveKeys[input.KeyCode] then
+					pressedMoveKeys = math.max(0, pressedMoveKeys - 1)
+					local state = humanoid:GetState()
+					if pressedMoveKeys == 0 and (state == Enum.HumanoidStateType.Running or state == Enum.HumanoidStateType.RunningNoPhysics) then
+						play("idle", 0.25)
+					end
+				end
+			end))
+
+			table.insert(activeConnections, humanoid.StateChanged:Connect(function(_, newState)
+				if newState == Enum.HumanoidStateType.Jumping then
+					play("jump", 0.15)
+				elseif newState == Enum.HumanoidStateType.Freefall then
+					play("fall", 0.3)
+				elseif newState == Enum.HumanoidStateType.Landed or newState == Enum.HumanoidStateType.Running then
+					if pressedMoveKeys > 0 and humanoid.MoveDirection.Magnitude > 0 then
+						play("walk", 0.2)
+					else
+						play("idle", 0.25)
+					end
+				end
+			end))
+
+			table.insert(activeConnections, humanoid.Running:Connect(function(speed)
+				local state = humanoid:GetState()
+				if state == Enum.HumanoidStateType.Jumping or state == Enum.HumanoidStateType.Freefall then
+					return
+				end
+				
+				if speed > 0.5 and pressedMoveKeys > 0 then
+					play("walk", 0.2)
+					
+					if loaded.walk and loaded.walk.IsPlaying then
+						local playbackScale = speed / BASE_WALK_SPEED
+						loaded.walk:AdjustSpeed(math.clamp(playbackScale, 0.5, 3))
+					end
+				else
+					play("idle", 0.25)
+				end
+			end))
+
+			play("idle", 0.1)
+		end
+
+		table.insert(activeConnections, LocalPlayer.CharacterAdded:Connect(function(character)
+			task.wait(0.2)
+			setup(character)
+		end))
+
+		if LocalPlayer.Character then
+			setup(LocalPlayer.Character)
+		end
+	end,
 })
 
 --- Gun mod ----------------------------------------------------------
