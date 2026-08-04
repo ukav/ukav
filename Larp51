@@ -38,6 +38,15 @@ Tab:CreateSection("Larp tools")
 
 --- Larp tools ----------------------------------------------------------
 
+--- Infinite Yield ----------------------------------------------------------
+
+Tab:CreateButton({
+    Name = "Infinite Yield",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))();
+    end,
+})
+
 --- Check ----------------------------------------------------------
 
 Tab:CreateButton({
