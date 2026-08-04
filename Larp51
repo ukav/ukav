@@ -514,6 +514,19 @@ Tab:CreateButton({
     end,
 })
 
+--- Remove Doors ----------------------------------------------------------
+
+Tab:CreateButton({
+    Name = "Remove Doors",
+    Callback = function()
+        for _, descendant in ipairs(game:GetService("Workspace")["Floor 1"]:GetDescendants()) do
+            if descendant.Name == "Door" then
+                descendant:Destroy()
+            end
+        end
+    end,
+})
+
 --- Max Zoom ----------------------------------------------------------
 
 Tab:CreateButton({
