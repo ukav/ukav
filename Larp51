@@ -1077,7 +1077,7 @@ WeaponTab:CreateButton({
         task.wait(1)
         local targetPart = workspace:WaitForChild("CorruptedZone"):WaitForChild("RGB - 9999 Cell"):WaitForChild("Head")
         root.CFrame = targetPart.CFrame
-        task.wait(0.1)
+        task.wait(1)
         resetCharacter()
     end,
 })
@@ -1093,8 +1093,9 @@ WeaponTab:CreateButton({
         local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
         root.CFrame = portal.CFrame
         task.wait(1)
-        local targetPart = workspace:WaitForChild("GetScarecrowSkull")
+        local targetPart = game:GetService("Workspace"):WaitForChild("GetScarecrowSkull")
         root.CFrame = targetPart.CFrame
+        task.wait(1)
         resetCharacter()
     end,
 })
@@ -1112,6 +1113,7 @@ WeaponTab:CreateButton({
         task.wait(1)
         local targetPart = game:GetService("Workspace"):WaitForChild("CyberLand"):WaitForChild("GetMechGun")
         root.CFrame = targetPart.CFrame
+        task.wait(1)
         resetCharacter()
     end,
 })
@@ -1129,6 +1131,7 @@ WeaponTab:CreateButton({
         task.wait(1)
         local targetPart = game:GetService("Workspace"):WaitForChild("GetCrescendo")
         root.CFrame = targetPart.CFrame
+        task.wait(1)
         resetCharacter()
     end,
 })
@@ -1146,6 +1149,7 @@ WeaponTab:CreateButton({
         task.wait(1)
         local exitHead = game:GetService("Workspace"):WaitForChild("NightCity"):WaitForChild("Exit"):WaitForChild("Head")
         root.CFrame = exitHead.CFrame
+        task.wait(1)
         resetCharacter()
     end,
 })
@@ -1163,6 +1167,7 @@ WeaponTab:CreateButton({
         task.wait(1)
         local targetHead = game:GetService("Workspace"):WaitForChild("DeadGround"):WaitForChild("LXD - 9999 Cell"):WaitForChild("Head")
         root.CFrame = targetHead.CFrame
+        task.wait(1)
         resetCharacter()
     end,
 })
@@ -1180,6 +1185,7 @@ WeaponTab:CreateButton({
         task.wait(1)
         local targetHead = game:GetService("Workspace").MazeWorld["ESCAPE FROM THIS HELL"].Head
         root.CFrame = targetHead.CFrame
+        task.wait(1)
         resetCharacter()
     end,
 })
