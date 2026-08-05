@@ -538,45 +538,52 @@ Tab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
 
-        local originalCFrame = root.CFrame
-        local skipCurrent = false
+        local oldPos = root.CFrame
 
-        local connection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
-            if not gameProcessed and input.KeyCode == Enum.KeyCode.Q then
+        local skipCurrent = false
+        local connection
+        connection = UserInputService.InputBegan:Connect(function(input, gpe)
+            if not gpe and input.KeyCode == Enum.KeyCode.Q then
                 skipCurrent = true
             end
         end)
 
-        for _, obj in ipairs(workspace:GetDescendants()) do
-            if obj.Name == "SupplyCrate" then
-                local targetPart = obj:IsA("BasePart") and obj or obj:FindFirstChildWhichIsA("BasePart")
-                if targetPart then
-                    local prompt = obj:FindFirstChildWhichIsA("ProximityPrompt", true)
-                    root.CFrame = targetPart.CFrame
-                    task.wait(0.1)
-
-                    if prompt and prompt.Enabled then
-                        prompt:InputHoldBegin()
-                        task.wait(0.1)
-                        prompt:InputHoldEnd()
-                        fireproximityprompt(prompt, 0)
-                    end
-
-                    local startTime = tick()
-                    while tick() - startTime < 1 do
-                        if skipCurrent then
-                            break
-                        end
-                        task.wait()
-                    end
-
+        for _, v in ipairs(workspace:GetDescendants()) do
+            if v:IsA("BasePart") and v.Name == "SupplyCrate" then
+                local prompt = v:FindFirstChildOfClass("ProximityPrompt") or v:FindFirstChildWhichIsA("ProximityPrompt", true)
+                if prompt then
                     skipCurrent = false
+                    
+                    local startTime = tick()
+                    repeat
+                        root.CFrame = v.CFrame
+                        root.AssemblyLinearVelocity = Vector3.zero
+                        root.AssemblyAngularVelocity = Vector3.zero
+                        
+                        fireproximityprompt(prompt, 0)
+                        task.wait(0.1)
+                    until not prompt.Parent or not prompt.Enabled or skipCurrent or (tick() - startTime > 10)
+                    
+                    if not skipCurrent then
+                        local holdTime = tick()
+                        while tick() - holdTime < 1 and not skipCurrent do
+                            root.CFrame = v.CFrame
+                            root.AssemblyLinearVelocity = Vector3.zero
+                            root.AssemblyAngularVelocity = Vector3.zero
+                            task.wait(0.1)
+                        end
+                    end
                 end
             end
         end
 
-        root.CFrame = originalCFrame
-        connection:Disconnect()
+        if connection then
+            connection:Disconnect()
+        end
+
+        root.AssemblyLinearVelocity = Vector3.zero
+        root.AssemblyAngularVelocity = Vector3.zero
+        root.CFrame = oldPos
     end,
 })
 
@@ -1212,7 +1219,6 @@ TeleportTab:CreateButton({Name="Go to Mineshaft", Callback=function() local r=ga
 TeleportTab:CreateButton({Name="Shop", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(587, 1151, 661) end})
 local Section = TeleportTab:CreateSection("Custom")
 Section:Set("Underground")
-TeleportTab:CreateButton({Name="Portal Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-106, 982, 850) end})
 TeleportTab:CreateButton({Name="Water Gun Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-363, 971, -227) end})
 TeleportTab:CreateButton({Name="Jack", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-514, 881, -278) end})
 TeleportTab:CreateButton({Name="Sewer", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-521, 916, -56) end})
@@ -1241,9 +1247,11 @@ TeleportTab:CreateButton({Name="Prison", Callback=function() game.Players.LocalP
 TeleportTab:CreateButton({Name="Factory", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-398, 1075, 681) end})
 local Section = TeleportTab:CreateSection("Main Hall")
 Section:Set("Main Hall")
+TeleportTab:CreateButton({Name="Portal Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-106, 982, 850) end})
 TeleportTab:CreateButton({Name="1", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(269, 982, 752) end})
 TeleportTab:CreateButton({Name="2", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(51, 982, 749) end})
 TeleportTab:CreateButton({Name="3", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-184, 982, 749) end})
+
 TeleportTab:CreateButton({Name="Button", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA) end})
 
 Rayfield:LoadConfiguration()
