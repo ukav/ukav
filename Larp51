@@ -32,6 +32,9 @@ local healToggle = false; game:GetService("RunService").RenderStepped:Connect(fu
 -- God Mode Single Line
 local godModeEnabled, trackedParts = false, {}; local function restoreCollisions() for part, _ in pairs(trackedParts) do if part and part.Parent then part.CanTouch = true end end; trackedParts = {} end; task.spawn(function() while true do task.wait(0.1); if godModeEnabled then local character = game.Players.LocalPlayer.Character; if character and character:FindFirstChild("HumanoidRootPart") then local hrp = character.HumanoidRootPart; local parts = workspace:GetPartBoundsInRadius(hrp.Position, 10); for _, part in ipairs(parts) do if part.CanTouch then part.CanTouch = false; trackedParts[part] = true end end end else restoreCollisions() end end end); game.Players.LocalPlayer.CharacterAdded:Connect(restoreCollisions)
 
+-- Instant Prompt
+local instantInteractEnabled = false; game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(p, pl) if instantInteractEnabled and pl == game:GetService("Players").LocalPlayer then fireproximityprompt(p) end end)
+
 -- UI Setup
 local Tab = Window:CreateTab("Larp tools", 4483362458) 
 Tab:CreateSection("Larp tools")
@@ -523,6 +526,60 @@ Tab:CreateButton({
     end,
 })
 
+--- Supply Crate ----------------------------------------------------------
+
+Tab:CreateButton({
+    Name = "Supply Crate",
+    Callback = function()
+        local UserInputService = game:GetService("UserInputService")
+        local Players = game:GetService("Players")
+
+        local LocalPlayer = Players.LocalPlayer
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local root = char:WaitForChild("HumanoidRootPart")
+
+        local originalCFrame = root.CFrame
+        local skipCurrent = false
+
+        local connection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+            if not gameProcessed and input.KeyCode == Enum.KeyCode.Q then
+                skipCurrent = true
+            end
+        end)
+
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            if obj.Name == "SupplyCrate" then
+                local targetPart = obj:IsA("BasePart") and obj or obj:FindFirstChildWhichIsA("BasePart")
+                if targetPart then
+                    local prompt = obj:FindFirstChildWhichIsA("ProximityPrompt", true)
+                    root.CFrame = targetPart.CFrame
+                    task.wait(0.1)
+
+                    if prompt and prompt.Enabled then
+                        prompt:InputHoldBegin()
+                        task.wait(0.1)
+                        prompt:InputHoldEnd()
+                        fireproximityprompt(prompt, 0)
+                    end
+
+                    local startTime = tick()
+                    while tick() - startTime < 1 do
+                        if skipCurrent then
+                            break
+                        end
+                        task.wait()
+                    end
+
+                    skipCurrent = false
+                end
+            end
+        end
+
+        root.CFrame = originalCFrame
+        connection:Disconnect()
+    end,
+})
+
 --- Remove Doors ----------------------------------------------------------
 
 Tab:CreateButton({
@@ -745,10 +802,13 @@ Tab:CreateButton({
     end,
 })
 
---- Godmode ----------------------------------------------------------
+local Section = Tab:CreateSection("Toggle")
+Section:Set("Toggle")
+
+--- God mode ----------------------------------------------------------
 
 Tab:CreateToggle({
-    Name = "Godmode",
+    Name = "God mode",
     CurrentValue = false,
     Flag = "GodmodeToggle",
     Callback = function(Value)
@@ -764,9 +824,8 @@ Tab:CreateToggle({
 Tab:CreateToggle({
     Name = "Instant Prompt",
     CurrentValue = false,
-    Callback = function(Value)
-        getgenv().InstantPromptEnabled = Value
-    end,
+    Flag = "InstantPrompt",
+    Callback = function(Value) instantInteractEnabled = Value end,
 })
 if not getgenv().InstantPromptConn then
     getgenv().InstantPromptConn = game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(prompt)
@@ -866,7 +925,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get LXW",
     Callback = function()
@@ -881,7 +939,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Vulcan",
     Callback = function()
@@ -896,7 +953,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Ice Crossbow",
     Callback = function()
@@ -911,7 +967,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Red Missile Launcher",
     Callback = function()
@@ -926,7 +981,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Burning Sword v1",
     Callback = function()
@@ -934,56 +988,23 @@ WeaponTab:CreateButton({
         local LocalPlayer = Players.LocalPlayer
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
-        local camera = workspace.CurrentCamera
         teleportToLobby(root)
-        local function getNearestPrompt()
-            local nearest, shortest = nil, math.huge
-            for _, v in pairs(workspace:GetDescendants()) do
-                if v:IsA("ProximityPrompt") and v.Enabled then
-                    local part = v.Parent:IsA("BasePart") and v.Parent
-                    if part then
-                        local dist = (root.Position - part.Position).Magnitude
-                        if dist < shortest then
-                            shortest = dist
-                            nearest = v
-                        end
-                    end
-                end
-            end
-            return nearest
-        end
-        local function spamPrompt(prompt)
-            local startTime = tick()
-            while tick() - startTime < 0.1 do
-                prompt:InputHoldBegin()
-                prompt:InputHoldEnd()
+        
+        for i = 1, 7 do
+            local button = workspace:WaitForChild("Incinerator"):WaitForChild("ChallengeButton" .. i):WaitForChild("Button")
+            local prompt = button:WaitForChild("ProximityPrompt")
+            
+            repeat
                 task.wait()
-            end
+                root.CFrame = button.CFrame
+                fireproximityprompt(prompt, 0)
+            until prompt.Enabled == false
         end
-        camera.CFrame = CFrame.new(598, 1166, 759, 1, 0, 0, 0, 0, 1, 0, 1, 0)
-        local waypoints = {
-            Vector3.new(-268, 1052, 1128),
-            Vector3.new(-268, 1052, 1189),
-            Vector3.new(-174, 1062, 1138),
-            Vector3.new(-174, 1062, 1178),
-            Vector3.new(-134, 1062, 1178),
-            Vector3.new(-135, 1062, 1139),
-            Vector3.new(-20, 1052, 1159)
-        }
-        for _, pos in ipairs(waypoints) do
-            root.CFrame = CFrame.new(pos)
-            task.wait(0.1)
-            local prompt = getNearestPrompt()
-            if prompt then
-                spamPrompt(prompt)
-            end
-        end
-        root.CFrame = CFrame.new(63, 1079, 1159)
-        task.wait(1)
+        
+        root.CFrame = CFrame.new(63, 1069, 1159)
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Burning Sword v2",
     Callback = function()
@@ -997,12 +1018,11 @@ WeaponTab:CreateButton({
             root.CFrame = Workspace.Incinerator.ChallengeButton7.Button.CFrame
             fireproximityprompt(Workspace.Incinerator.ChallengeButton7.Button.ProximityPrompt, 0)
         until Workspace.Incinerator.ChallengeButton7.Button.ProximityPrompt.Enabled == false
-        root.CFrame = CFrame.new(61, 1062, 1158)
+        root.CFrame = CFrame.new(63, 1069, 1159)
         task.wait(1)
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Water Gun",
     Callback = function()
@@ -1026,7 +1046,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Reaper's Scythe",
     Callback = function()
@@ -1041,7 +1060,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Sheriff's Revolver",
     Callback = function()
@@ -1059,9 +1077,7 @@ WeaponTab:CreateButton({
 
 --- Event Weapons ----------------------------------------------------------
 
-local Divider = WeaponTab:CreateDivider()
 local Section = WeaponTab:CreateSection("Weapons")
-
 Section:Set("Event Weapons")
 
 WeaponTab:CreateButton({
@@ -1081,7 +1097,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Scarecrow's Skull",
     Callback = function()
@@ -1099,7 +1114,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Mech O' Matic",
     Callback = function()
@@ -1117,7 +1131,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Crescendo",
     Callback = function()
@@ -1135,7 +1148,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Corrupted Rifle",
     Callback = function()
@@ -1153,7 +1165,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get LXD",
     Callback = function()
@@ -1171,7 +1182,6 @@ WeaponTab:CreateButton({
         resetCharacter()
     end,
 })
-
 WeaponTab:CreateButton({
     Name = "Get Dual LX3",
     Callback = function()
@@ -1199,12 +1209,41 @@ TeleportTab:CreateButton({Name="Portal", Callback=function() local r=game.Player
 TeleportTab:CreateButton({Name="Return to Base", Callback=function() local r=game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart"); firetouchinterest(r,workspace.Ground.GoBack,0); firetouchinterest(r,workspace.Ground.GoBack,1) end})
 TeleportTab:CreateButton({Name="Go to Crafting Room", Callback=function() local r=game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart"); firetouchinterest(r,workspace.Ground.GoCraft,0); firetouchinterest(r,workspace.Ground.GoCraft,1) end})
 TeleportTab:CreateButton({Name="Go to Mineshaft", Callback=function() local r=game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart"); firetouchinterest(r,workspace.Ground.GoMine,0); firetouchinterest(r,workspace.Ground.GoMine,1) end})
+TeleportTab:CreateButton({Name="Shop", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(587, 1151, 661) end})
+local Section = TeleportTab:CreateSection("Custom")
+Section:Set("Underground")
 TeleportTab:CreateButton({Name="Portal Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-106, 982, 850) end})
-TeleportTab:CreateButton({Name="Burning Sword Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-316, 1062, 1159) end})
 TeleportTab:CreateButton({Name="Water Gun Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-363, 971, -227) end})
-TeleportTab:CreateButton({Name="Jack's Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-514, 881, -278) end})
+TeleportTab:CreateButton({Name="Jack", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-514, 881, -278) end})
 TeleportTab:CreateButton({Name="Sewer", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-521, 916, -56) end})
-TeleportTab:CreateButton({Name="Reaper's Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-188, 982, 276) end})
+TeleportTab:CreateButton({Name="Underground", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-506, 923, 581) end})
+local Section = TeleportTab:CreateSection("Creepypasta")
+Section:Set("Creepypasta")
+TeleportTab:CreateButton({Name="Reaper", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-188, 982, 276) end})
+TeleportTab:CreateButton({Name="Volcano", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-615, 961, 225) end})
+TeleportTab:CreateButton({Name="1", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(383, 982, 729) end})
+TeleportTab:CreateButton({Name="2", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(381, 982, 526) end})
+TeleportTab:CreateButton({Name="3", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(68, 982, 304) end})
+TeleportTab:CreateButton({Name="4", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-155, 982, 302) end})
+local Section = TeleportTab:CreateSection("Robot Zone")
+Section:Set("Robot Zone")
+TeleportTab:CreateButton({Name="Computer Area", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(336, 982, 865) end})
+TeleportTab:CreateButton({Name="Ice Zone", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(255, 695, 950) end})
+TeleportTab:CreateButton({Name="LWD", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-16, 982, 1052) end})
+TeleportTab:CreateButton({Name="1", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(384, 982, 769) end})
+TeleportTab:CreateButton({Name="2", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(224, 982, 1065) end})
+TeleportTab:CreateButton({Name="3", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-15, 982, 1067) end})
+local Section = TeleportTab:CreateSection("Floor 2")
+Section:Set("Floor 2")
+TeleportTab:CreateButton({Name="Floor 2 Passge", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-393, 1062, 1066) end})
+TeleportTab:CreateButton({Name="Incinerator", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-316, 1062, 1159) end})
+TeleportTab:CreateButton({Name="Prison", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-554, 1089, 1064) end})
+TeleportTab:CreateButton({Name="Factory", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-398, 1075, 681) end})
+local Section = TeleportTab:CreateSection("Main Hall")
+Section:Set("Main Hall")
+TeleportTab:CreateButton({Name="1", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(269, 982, 752) end})
+TeleportTab:CreateButton({Name="2", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(51, 982, 749) end})
+TeleportTab:CreateButton({Name="3", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-184, 982, 749) end})
 TeleportTab:CreateButton({Name="Button", Callback=function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA) end})
 
 Rayfield:LoadConfiguration()
