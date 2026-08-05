@@ -532,6 +532,7 @@ Tab:CreateButton({
     Name = "Supply Crates & Balls",
     Callback = function()
         local UserInputService = game:GetService("UserInputService")
+        local RunService = game:GetService("RunService")
         local Players = game:GetService("Players")
 
         local LocalPlayer = Players.LocalPlayer
@@ -539,6 +540,26 @@ Tab:CreateButton({
         local root = char:WaitForChild("HumanoidRootPart")
 
         local oldPos = root.CFrame
+
+        -- Create temporary platform
+        local platform = Instance.new("Part")
+        platform.Size = Vector3.new(2, 1, 2)
+        platform.Transparency = 1
+        platform.Anchored = true
+        platform.CanCollide = true
+        platform.Parent = workspace
+
+        -- Enable Noclip
+        local noclipConnection
+        noclipConnection = RunService.Stepped:Connect(function()
+            if char then
+                for _, part in ipairs(char:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end)
 
         local skipCurrent = false
         local connection
@@ -556,7 +577,10 @@ Tab:CreateButton({
                     
                     local startTime = tick()
                     repeat
-                        root.CFrame = v.CFrame
+                        local targetCF = v.CFrame * CFrame.new(0, -4, 0)
+                        root.CFrame = targetCF
+                        platform.CFrame = targetCF * CFrame.new(0, -3.5, 0)
+                        
                         root.AssemblyLinearVelocity = Vector3.zero
                         root.AssemblyAngularVelocity = Vector3.zero
                         
@@ -567,7 +591,10 @@ Tab:CreateButton({
                     if not skipCurrent then
                         local holdTime = tick()
                         while tick() - holdTime < 1 and not skipCurrent do
-                            root.CFrame = v.CFrame
+                            local targetCF = v.CFrame * CFrame.new(0, -4, 0)
+                            root.CFrame = targetCF
+                            platform.CFrame = targetCF * CFrame.new(0, -3.5, 0)
+                            
                             root.AssemblyLinearVelocity = Vector3.zero
                             root.AssemblyAngularVelocity = Vector3.zero
                             task.wait(0.1)
@@ -581,6 +608,20 @@ Tab:CreateButton({
             connection:Disconnect()
         end
 
+        -- Disable Noclip & cleanup
+        if noclipConnection then
+            noclipConnection:Disconnect()
+        end
+
+        if char then
+            for _, part in ipairs(char:GetDescendants()) do
+                if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+                    part.CanCollide = true
+                end
+            end
+        end
+
+        platform:Destroy()
         root.AssemblyLinearVelocity = Vector3.zero
         root.AssemblyAngularVelocity = Vector3.zero
         root.CFrame = oldPos
