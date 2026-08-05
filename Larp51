@@ -586,6 +586,99 @@ Tab:CreateButton({
     end,
 })
 
+--- Cultist Killer ----------------------------------------------------------
+
+Tab:CreateButton({
+    Name = "Kill Cultists",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+
+        local targetNames = {
+            ["Cultist"] = true
+        }
+
+        local wantedGuns = {
+            ["Screamer"] = true
+        }
+
+        local function getGuns()
+            local guns = {}
+            local char = LocalPlayer.Character
+            local backpack = LocalPlayer.Backpack
+
+            local function checkAndAdd(item)
+                if item:IsA("Tool") and wantedGuns[item.Name] and item:FindFirstChild("GunScript_Server") then
+                    table.insert(guns, item)
+                end
+            end
+
+            if char then
+                for _, item in pairs(char:GetChildren()) do
+                    checkAndAdd(item)
+                end
+            end
+            if backpack then
+                for _, item in pairs(backpack:GetChildren()) do
+                    checkAndAdd(item)
+                end
+            end
+
+            return guns
+        end
+
+        local function isValidNPC(model)
+            if not model:IsA("Model") then return false end
+            if not targetNames[model.Name] then return false end
+            if Players:GetPlayerFromCharacter(model) then return false end
+            local humanoid = model:FindFirstChildOfClass("Humanoid")
+            local torso = model:FindFirstChild("HumanoidRootPart") or model:FindFirstChild("Torso")
+            if not humanoid or not torso then return false end
+            return true
+        end
+
+        task.spawn(function()
+            while true do
+                local char = LocalPlayer.Character
+                local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+                local hrp = char and char:FindFirstChild("HumanoidRootPart")
+                
+                if char and hrp and humanoid and humanoid.Health > 0 then
+                    local guns = getGuns()
+                    if #guns > 0 then
+                        local aliveTargets = 0
+
+                        for _, npc in ipairs(workspace:GetChildren()) do
+                            if isValidNPC(npc) then
+                                local humanoidNPC = npc:FindFirstChildOfClass("Humanoid")
+                                local torso = npc:FindFirstChild("HumanoidRootPart") or npc:FindFirstChild("Torso")
+                                if humanoidNPC and torso and humanoidNPC.Health > 0 then
+                                    aliveTargets = aliveTargets + 1
+                                    for _, gun in ipairs(guns) do
+                                        local remote = gun.GunScript_Server and gun.GunScript_Server:FindFirstChild("InflictTarget")
+                                        if remote then
+                                            pcall(function()
+                                                if humanoidNPC.Health > 0 then
+                                                    remote:FireServer("Head", humanoidNPC, torso, gun, Vector3.new())
+                                                end
+                                            end)
+                                        end
+                                    end
+                                end
+                            end
+                        end
+
+                        if aliveTargets == 0 then
+                            break
+                        end
+                    end
+                end
+                task.wait(0.01)
+            end
+        end)
+    end,
+})
+
 --- Remove Doors ----------------------------------------------------------
 
 Tab:CreateButton({
