@@ -528,7 +528,7 @@ Tab:CreateButton({
 --- Supply Crate ----------------------------------------------------------
 
 Tab:CreateButton({
-    Name = "Farm Supply Crates & Balls",
+    Name = "Supply Crates & Balls",
     Callback = function()
         local UserInputService = game:GetService("UserInputService")
         local Players = game:GetService("Players")
@@ -1238,8 +1238,6 @@ WeaponTab:CreateButton({
         local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local root = char:WaitForChild("HumanoidRootPart")
         teleportToLobby(root)
-        local portal = game:GetService("Workspace"):WaitForChild("Portal"):WaitForChild("Beam")
-        root.CFrame = portal.CFrame
         task.wait(1)
         local targetPart = game:GetService("Workspace"):WaitForChild("GetCrescendo")
         root.CFrame = targetPart.CFrame
