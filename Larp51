@@ -528,7 +528,7 @@ Tab:CreateButton({
 --- Supply Crate ----------------------------------------------------------
 
 Tab:CreateButton({
-    Name = "Supply Crate",
+    Name = "Farm Supply Crates & Balls",
     Callback = function()
         local UserInputService = game:GetService("UserInputService")
         local Players = game:GetService("Players")
@@ -548,7 +548,7 @@ Tab:CreateButton({
         end)
 
         for _, v in ipairs(workspace:GetDescendants()) do
-            if v:IsA("BasePart") and v.Name == "SupplyCrate" then
+            if v:IsA("BasePart") and (v.Name == "SupplyCrate" or v.Name == "SupplyBall") then
                 local prompt = v:FindFirstChildOfClass("ProximityPrompt") or v:FindFirstChildWhichIsA("ProximityPrompt", true)
                 if prompt then
                     skipCurrent = false
