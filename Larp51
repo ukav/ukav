@@ -33,7 +33,7 @@ local Players, RunService = game:GetService("Players"), game:GetService("RunServ
 local godModeEnabled, trackedParts = false, {}; local function restoreCollisions() for part, _ in pairs(trackedParts) do if part and part.Parent then part.CanTouch = true end end; trackedParts = {} end; task.spawn(function() while true do task.wait(0.1); if godModeEnabled then local character = game.Players.LocalPlayer.Character; if character and character:FindFirstChild("HumanoidRootPart") then local hrp = character.HumanoidRootPart; local parts = workspace:GetPartBoundsInRadius(hrp.Position, 10); for _, part in ipairs(parts) do if part.CanTouch then part.CanTouch = false; trackedParts[part] = true end end end else restoreCollisions() end end end); game.Players.LocalPlayer.CharacterAdded:Connect(restoreCollisions)
 
 -- Instant Prompt
-local instantInteractEnabled = false; game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(p, pl) if instantInteractEnabled and pl == game:GetService("Players").LocalPlayer then fireproximityprompt(p) end end)
+local function enableInstantPrompt() if not getgenv().InstantPromptConn then getgenv().InstantPromptConn = game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(prompt) task.wait(0.05) fireproximityprompt(prompt) end) end end local function disableInstantPrompt() if getgenv().InstantPromptConn then getgenv().InstantPromptConn:Disconnect() getgenv().InstantPromptConn = nil end end Tab:CreateToggle({Name = "Instant Prompt", CurrentValue = false, Flag = "InstantPrompt", Callback = function(Value) if Value then enableInstantPrompt() else disableInstantPrompt() end end})
 
 -- UI Setup
 local Tab = Window:CreateTab("Larp tools", 4483362458) 
@@ -966,16 +966,22 @@ Tab:CreateToggle({
     Name = "Instant Prompt",
     CurrentValue = false,
     Flag = "InstantPrompt",
-    Callback = function(Value) instantInteractEnabled = Value end,
-})
-if not getgenv().InstantPromptConn then
-    getgenv().InstantPromptConn = game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(prompt)
-        if getgenv().InstantPromptEnabled then
-            task.wait(0.05)
-            fireproximityprompt(prompt)
+    Callback = function(Value)
+        if Value then
+            if not getgenv().InstantPromptConn then
+                getgenv().InstantPromptConn = game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(prompt)
+                    task.wait(0.05)
+                    fireproximityprompt(prompt)
+                end)
+            end
+        else
+            if getgenv().InstantPromptConn then
+                getgenv().InstantPromptConn:Disconnect()
+                getgenv().InstantPromptConn = nil
+            end
         end
-    end)
-end
+    end,
+})
 
 --- Auto Bypass ----------------------------------------------------------
 
