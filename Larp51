@@ -983,36 +983,28 @@ end
 
 --- Auto Bypass ----------------------------------------------------------
 
+local autoBypassLoop = false
+
 local Toggle = Tab:CreateToggle({
     Name = "Auto Bypass",
     CurrentValue = false,
     Flag = "AutoBypassToggle",
     Callback = function(Value)
+        autoBypassLoop = Value
         if Value then
-            local player = game.Players.LocalPlayer
-            
-            if autoBypassConnection then autoBypassConnection:Disconnect() end
-            
-            local function runOnChar(char)
-                task.spawn(function()
-                    task.wait(0.1)
-                    local root = char:WaitForChild("HumanoidRootPart", 5)
-                    if root then
-                        teleportToLobby(root)
+            task.spawn(function()
+                while autoBypassLoop do
+                    local player = game.Players.LocalPlayer
+                    local char = player.Character
+                    if char then
+                        local root = char:FindFirstChild("HumanoidRootPart")
+                        if root then
+                            teleportToLobby(root)
+                        end
                     end
-                end)
-            end
-
-            autoBypassConnection = player.CharacterAdded:Connect(runOnChar)
-            
-            if player.Character then
-                runOnChar(player.Character)
-            end
-        else
-            if autoBypassConnection then
-                autoBypassConnection:Disconnect()
-                autoBypassConnection = nil
-            end
+                    task.wait(0.5)
+                end
+            end)
         end
     end,
 })
