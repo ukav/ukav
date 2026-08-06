@@ -31,6 +31,7 @@ local godModeEnabled, trackedParts = false, {}; local function restoreCollisions
 
 -- Instant Prompt
 local player = game:GetService("Players").LocalPlayer; local instantInteractEnabled = false; local InstantPromptToggle; local function setupDeath(chr) local hum = chr:WaitForChild("Humanoid", 10) if hum then hum.Died:Connect(function() instantInteractEnabled = false if InstantPromptToggle then InstantPromptToggle:Set(false) end end) end end; if player.Character then setupDeath(player.Character) end; player.CharacterAdded:Connect(setupDeath); game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(p, pl) if instantInteractEnabled and pl == game:GetService("Players").LocalPlayer then fireproximityprompt(p) end end)
+
 -- UI Setup
 local Tab = Window:CreateTab("Larp tools", 4483362458) 
 Tab:CreateSection("Larp tools")
@@ -720,14 +721,19 @@ Tab:CreateButton({
 --- Remove Doors ----------------------------------------------------------
 
 Tab:CreateButton({
-    Name = "Remove Doors",
-    Callback = function()
-        for _, descendant in ipairs(game:GetService("Workspace")["Floor 1"]:GetDescendants()) do
-            if descendant.Name == "Door" then
-                descendant:Destroy()
-            end
-        end
-    end,
+	Name = "Remove Doors",
+	Callback = function()
+		for _, floorName in ipairs({"Floor 1", "Floor 2"}) do
+			local floor = game:GetService("Workspace"):FindFirstChild(floorName)
+			if floor then
+				for _, descendant in ipairs(floor:GetDescendants()) do
+					if descendant.Name == "Door" then
+						descendant:Destroy()
+					end
+				end
+			end
+		end
+	end,
 })
 
 --- Max Zoom ----------------------------------------------------------
