@@ -2,7 +2,7 @@ local player = game.Players.LocalPlayer
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Larp in Area 51 GUI",
+   Name = "Larp in Area 51 GUI v7.6",
    Icon = 0, 
    LoadingTitle = "Larp in Area 51",
    LoadingSubtitle = "by Me",
