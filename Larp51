@@ -2,7 +2,7 @@ local player = game.Players.LocalPlayer
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Larp in Area 51 GUI",
+   Name = "Larp in Area 51 GUI v8",
    Icon = 0, 
    LoadingTitle = "Larp in Area 51",
    LoadingSubtitle = "by Me",
@@ -17,9 +17,6 @@ local Window = Rayfield:CreateWindow({
 -- Notif
 local AkaliNotif={Notify=function(P)local f=Instance.new("Frame",game:GetService("CoreGui"):FindFirstChild("AkaliNotif")or Instance.new("ScreenGui",game:GetService("CoreGui"):Clone().Name=="AkaliNotif"and game:GetService("CoreGui"):FindFirstChild("AkaliNotif")or(function()local s=Instance.new("ScreenGui",game:GetService("CoreGui"));s.Name="AkaliNotif";return s end)()));f.Size=UDim2.new(0,200,0,60);f.Position=UDim2.new(1,-210,0,50);f.BackgroundColor3=Color3.fromRGB(30,30,30);f.BorderSizePixel=0;local t=Instance.new("TextLabel",f);t.Text=P.Title;t.Size=UDim2.new(1,0,0.5,0);t.TextColor3=Color3.new(1,1,1);t.BackgroundTransparency=1;local d=Instance.new("TextLabel",f);d.Text=P.Description;d.Size=UDim2.new(1,0,0.5,0);d.Position=UDim2.new(0,0,0.5,0);d.TextColor3=Color3.new(0.8,0.8,0.8);d.BackgroundTransparency=1;task.wait(P.Duration or 5);f:Destroy()end}
 
--- Bypass
-local part = workspace:FindFirstChild("Larp") or (function() local p = Instance.new("Part", workspace); p.Anchored = true; p.CanCollide = false; p.Transparency = 1; p.Size = Vector3.new(68, 1, 64); p.CFrame = CFrame.new(624, 1149, 750.5) * CFrame.Angles(0, math.rad(90), 0); p.Name = "Larp"; return p end)() local function teleportToLobby(r) local savedCF = r.CFrame; while workspace:FindFirstChild("Ground") and workspace.Ground:FindFirstChild("Entrance") and workspace.Ground.Entrance.CanCollide do r.CFrame = part.CFrame; task.wait(1.5) end; r.CFrame = savedCF end
-
 -- Reset Logic
 local function resetCharacter() game.Players.LocalPlayer.Character:BreakJoints() end
 
@@ -29,12 +26,11 @@ local toggle, radius, wantedGuns, zones = false, 20, { ["Inglaciator"] = true },
 -- Auto Heal
 local Players, RunService = game:GetService("Players"), game:GetService("RunService") local LocalPlayer = Players.LocalPlayer local healToggle = false RunService.RenderStepped:Connect(function() if not healToggle then return end local char = LocalPlayer.Character if char then for _, v in ipairs(char:GetChildren()) do if v:IsA("Tool") and v.Name == "Cleansed Rifle" then v.GripPos = Vector3.new(50, 50, 50) end end end end) task.spawn(function() while true do if healToggle then local char = LocalPlayer.Character local hum = char and char:FindFirstChildOfClass("Humanoid") if char and hum and hum.Health > 0 and hum.Health < (hum.MaxHealth - 1) then local backpack = LocalPlayer:FindFirstChild("Backpack") local rifle = (backpack and backpack:FindFirstChild("Cleansed Rifle")) or char:FindFirstChild("Cleansed Rifle") if rifle then local previousTool = char:FindFirstChildOfClass("Tool") if previousTool and previousTool ~= rifle and backpack then previousTool.Parent = backpack end if rifle.Parent ~= char then rifle.Parent = char end repeat char = LocalPlayer.Character hum = char and char:FindFirstChildOfClass("Humanoid") if char and hum and hum.Health > 0 then local torso = char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso") or char:FindFirstChild("HumanoidRootPart") local event = rifle:FindFirstChild("GunScript_Server") and rifle.GunScript_Server:FindFirstChild("InflictTarget") if event and torso then event:FireServer("Torso", hum, torso, rifle, Vector3.new(0.41955700516701, -0.16235166788101, 0.89309215545654)) end end task.wait(0.1) until not healToggle or not hum or hum.Health <= 0 or hum.Health >= (hum.MaxHealth - 1) or not rifle.Parent if rifle and rifle.Parent == char and backpack then rifle.Parent = backpack if previousTool and previousTool.Parent == backpack then previousTool.Parent = char end end end end end task.wait(0.1) end end)
 
--- God Mode Single Line
+-- God Mode
 local godModeEnabled, trackedParts = false, {}; local function restoreCollisions() for part, _ in pairs(trackedParts) do if part and part.Parent then part.CanTouch = true end end; trackedParts = {} end; task.spawn(function() while true do task.wait(0.1); if godModeEnabled then local character = game.Players.LocalPlayer.Character; if character and character:FindFirstChild("HumanoidRootPart") then local hrp = character.HumanoidRootPart; local parts = workspace:GetPartBoundsInRadius(hrp.Position, 10); for _, part in ipairs(parts) do if part.CanTouch then part.CanTouch = false; trackedParts[part] = true end end end else restoreCollisions() end end end); game.Players.LocalPlayer.CharacterAdded:Connect(restoreCollisions)
 
 -- Instant Prompt
-local instantInteractEnabled = false; game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(p, pl) if instantInteractEnabled and pl == game:GetService("Players").LocalPlayer then fireproximityprompt(p) end end)
-
+local player = game:GetService("Players").LocalPlayer; local instantInteractEnabled = false; local InstantPromptToggle; local function setupDeath(chr) local hum = chr:WaitForChild("Humanoid", 10) if hum then hum.Died:Connect(function() instantInteractEnabled = false if InstantPromptToggle then InstantPromptToggle:Set(false) end end) end end; if player.Character then setupDeath(player.Character) end; player.CharacterAdded:Connect(setupDeath); game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(p, pl) if instantInteractEnabled and pl == game:GetService("Players").LocalPlayer then fireproximityprompt(p) end end)
 -- UI Setup
 local Tab = Window:CreateTab("Larp tools", 4483362458) 
 Tab:CreateSection("Larp tools")
@@ -962,11 +958,13 @@ Tab:CreateToggle({
 
 --- Instant Prompt ----------------------------------------------------------
 
-Tab:CreateToggle({
+InstantPromptToggle = Tab:CreateToggle({
     Name = "Instant Prompt",
     CurrentValue = false,
     Flag = "InstantPrompt",
-    Callback = function(Value) instantInteractEnabled = Value end,
+    Callback = function(Value)
+        instantInteractEnabled = Value
+    end,
 })
 if not getgenv().InstantPromptConn then
     getgenv().InstantPromptConn = game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(prompt)
